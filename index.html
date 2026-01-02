@@ -1,0 +1,1800 @@
+<!DOCTYPE html>
+<html lang="ru" x-data="{ 
+    isMobileMenuOpen: false,
+    isModalOpen: false,
+    isScrolled: false
+}" @keydown.escape="isModalOpen = false; isMobileMenuOpen = false"
+    @scroll.window="isScrolled = window.scrollY > 10">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>СКС ТАУРУС - Профессиональная газификация частных домов</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;500;600;700&display=swap');
+        @import url('https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;700&display=swap');
+        
+        [x-cloak] { display: none !important; }
+
+        body { 
+            font-family: 'Roboto', sans-serif;
+            letter-spacing: -0.01em;
+        }
+        
+        h1, h2, h3, h4, h5, h6,
+        .font-heading {
+            font-family: 'Montserrat', sans-serif;
+            font-weight: 600;
+            letter-spacing: -0.02em;
+        }
+        
+        body.menu-open, body.modal-open {
+            overflow: hidden;
+        }
+        
+        /* Оверлей для мобильного меню */
+        .mobile-menu-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background-color: rgba(0, 0, 0, 0.5);
+            z-index: 40;
+        }
+        
+        /* Остальные стили без изменений */
+        .consult-btn {
+            background: linear-gradient(135deg, #2563eb 0%, #1d4ed8 100%);
+            transition: all 0.3s ease;
+        }
+        
+        .consult-btn:hover {
+            background: linear-gradient(135deg, #1d4ed8 0%, #1e40af 100%);
+            transform: translateY(-2px);
+            box-shadow: 0 10px 25px rgba(37, 99, 235, 0.3);
+        }
+        
+        .hero-image-container {
+            position: relative;
+            width: 100%;
+            border-radius: 12px;
+            overflow: hidden;
+            box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
+        }
+        
+        .hero-image {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            display: block;
+        }
+        
+        .hero-image-container,
+        .hero-image {
+            min-height: 400px;
+        }
+        
+        @media (min-width: 640px) {
+            .hero-image-container,
+            .hero-image {
+                min-height: 450px;
+            }
+        }
+        
+        @media (min-width: 768px) {
+            .hero-image-container,
+            .hero-image {
+                min-height: 500px;
+            }
+        }
+        
+        @media (min-width: 1024px) {
+            .hero-image-container,
+            .hero-image {
+                min-height: 600px;
+                max-height: 700px;
+            }
+        }
+        
+        .flat-input {
+            border: 1px solid #d1d5db;
+            border-radius: 6px;
+            transition: border-color 0.2s ease;
+        }
+        
+        .flat-input:focus {
+            outline: none;
+            border-color: #3b82f6;
+            box-shadow: 0 0 0 2px rgba(59, 130, 246, 0.1);
+        }
+        
+        .flat-card {
+            border: 1px solid #e5e7eb;
+            border-radius: 8px;
+            background: white;
+            transition: all 0.3s ease;
+        }
+        
+        .flat-card:hover {
+            border-color: #3b82f6;
+            transform: translateY(-2px);
+            box-shadow: 0 10px 25px rgba(37, 99, 235, 0.1);
+        }
+        
+        .contact-link {
+            transition: all 0.2s ease;
+        }
+        
+        .contact-link:hover {
+            opacity: 0.9;
+            transform: translateY(-1px);
+        }
+        
+        .logo-img {
+            height: 40px;
+            width: auto;
+        }
+        
+        .footer-logo-img {
+            height: 32px;
+            width: auto;
+        }
+        
+        .stage-card {
+            display: flex;
+            flex-direction: column;
+            height: 100%;
+            min-height: 250px;
+        }
+        
+        .stage-card-content {
+            flex: 1;
+        }
+        
+        .stage-card-button-container {
+            margin-top: auto;
+            padding-top: 1rem;
+        }
+
+        /* Исправление для якорных ссылок с учетом фиксированного хедера */
+        html {
+            scroll-behavior: smooth;
+        }
+        
+        /* Явно для каждой секции - мобильные */
+        #services, #process, #projects, #pricing, #mistakes, #faq, #cta {
+            scroll-margin-top: 5rem;
+        }
+        
+        /* На десктопах - меньше отступ */
+        @media (min-width: 1024px) {
+            #services, #process, #projects, #pricing, #mistakes, #faq, #cta {
+                scroll-margin-top: 4rem;
+            }
+        }
+        
+    </style>
+</head>
+<body class="bg-white" :class="{ 'menu-open': isMobileMenuOpen, 'modal-open': isModalOpen }">
+    <!-- Оверлей для мобильного меню -->
+    <div x-show="isMobileMenuOpen" 
+         x-transition.opacity.duration.300ms
+         @click="isMobileMenuOpen = false"
+         class="mobile-menu-overlay lg:hidden">
+    </div>
+
+    <!-- Модальное окно для заявки с затемненным фоном -->
+    <div x-cloak x-show="isModalOpen" 
+         x-transition.opacity.duration.300ms
+         class="fixed inset-0 z-50">
+        <!-- Фон с 50% затемнением -->
+        <div class="absolute inset-0 bg-black bg-opacity-50"
+             @click="isModalOpen = false">
+        </div>
+        
+        <!-- Контент модального окна -->
+        <div class="absolute inset-0 flex items-center justify-center p-4">
+            <div class="bg-white rounded-xl shadow-2xl max-w-md w-full relative z-10"
+                 @click.stop>
+                <!-- Заголовок модального окна -->
+                <div class="p-6 border-b border-gray-100">
+                    <div class="flex justify-between items-center">
+                        <div>
+                            <h3 class="text-xl font-heading text-gray-800">Оставить заявку</h3>
+                            <p class="text-sm text-gray-500 mt-1">Заполните форму и мы перезвоним в течение 15 минут</p>
+                        </div>
+                        <button @click="isModalOpen = false" class="text-gray-400 hover:text-gray-600">
+                            <i class="fas fa-times text-xl"></i>
+                        </button>
+                    </div>
+                </div>
+                
+                <!-- Форма -->
+                <div class="p-6">
+                    <div class="space-y-5">
+                        <!-- Имя -->
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700 mb-2">
+                                Ваше имя <span class="text-red-500">*</span>
+                            </label>
+                            <input type="text" 
+                                   class="w-full px-4 py-3 flat-input"
+                                   placeholder="Иван Иванов">
+                        </div>
+                        
+                        <!-- Телефон -->
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700 mb-2">
+                                Номер телефона <span class="text-red-500">*</span>
+                            </label>
+                            <input type="tel" 
+                                   class="w-full px-4 py-3 flat-input"
+                                   placeholder="+7 (___) ___-__-__">
+                        </div>
+                        
+                        <!-- Сообщение -->
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700 mb-2">
+                                Комментарий (необязательно)
+                            </label>
+                            <textarea rows="3"
+                                      class="w-full px-4 py-3 flat-input"
+                                      placeholder="Например: нужна газификация дома 150м² в Соколе"></textarea>
+                        </div>
+                        
+                        <!-- Согласие -->
+                        <div class="flex items-start space-x-3">
+                            <div class="mt-1 h-4 w-4 bg-blue-600 border-gray-300 rounded flex items-center justify-center">
+                                <i class="fas fa-check text-white text-xs"></i>
+                            </div>
+                            <p class="text-xs text-gray-600">
+                                Нажимая кнопку, я соглашаюсь на обработку 
+                                <a href="#" class="text-blue-600 hover:text-blue-800">персональных данных</a>
+                            </p>
+                        </div>
+                        
+                        <!-- Кнопка отправки -->
+                        <button type="button" 
+                                @click="isModalOpen = false"
+                                class="w-full consult-btn text-white font-semibold py-4 px-6 rounded-lg transition duration-200">
+                            <i class="fas fa-paper-plane mr-2"></i>Оставить заявку
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Плоский Navbar с тенью при скролле -->
+    <nav class="bg-white sticky top-0 z-40 transition-shadow duration-300"
+         :class="isScrolled ? 'shadow-md' : ''">
+        <div class="container mx-auto px-4">
+            <div class="flex justify-between items-center h-16">
+                <!-- Логотип и название компании -->
+                <div class="flex items-center">
+                    <!-- Логотип из файла -->
+                    <div class="flex items-center space-x-3">
+                        <div class="flex items-center justify-center">
+                            <img src="logo.svg" alt="СКС ТАУРУС" class="logo-img">
+                        </div>
+                        <!-- Название компании рядом с логотипом (всегда видно) -->
+                        <p class="text-lg md:text-xl font-bold text-gray-900 leading-tight ml-3">
+                            СКС ТАУРУС
+                        </p>
+                    </div>
+                </div>
+
+                <!-- Десктопное меню -->
+                <div class="hidden lg:flex items-center space-x-1">
+                    <a href="#" class="px-4 py-2 text-gray-700 hover:text-blue-600 font-medium transition duration-200">Главная</a>
+                    <a href="#services" class="px-4 py-2 text-gray-700 hover:text-blue-600 font-medium transition duration-200">Услуги</a>
+                    <a href="#process" class="px-4 py-2 text-gray-700 hover:text-blue-600 font-medium transition duration-200">Процесс работы</a>
+                    <a href="#projects" class="px-4 py-2 text-gray-700 hover:text-blue-600 font-medium transition duration-200">Наши проекты</a>
+                    <a href="#pricing" class="px-4 py-2 text-gray-700 hover:text-blue-600 font-medium transition duration-200">Стоимость</a>
+                    <a href="#footer" class="px-4 py-2 text-gray-700 hover:text-blue-600 font-medium transition duration-200">Контакты</a>
+                    
+                    <!-- Телефон (кликабельный) -->
+                    <div class="ml-4 pl-4 border-l border-gray-200">
+                        <div class="flex items-center space-x-2">
+                            <i class="fas fa-phone text-blue-500 text-sm"></i>
+                            <div class="text-left">
+                                <a href="tel:+79114430101" class="contact-link">
+                                    <p class="text-sm font-bold text-blue-600 leading-tight hover:text-blue-700">
+                                        8 (911) 443-01-01
+                                    </p>
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Мобильный navbar с информацией и телефоном -->
+                <div class="lg:hidden flex items-center space-x-4">
+                    <!-- Информация в мобильном navbar -->
+                    <div class="hidden sm:flex items-center space-x-4">
+                        <!-- Телефон (кликабельный) -->
+                        <div class="flex items-center space-x-2">
+                            <i class="fas fa-phone text-blue-500 text-sm"></i>
+                            <div class="text-left">
+                                <a href="tel:+79114430101" class="contact-link">
+                                    <p class="text-sm font-bold text-blue-600 leading-tight hover:text-blue-700">
+                                        8 (911) 443-01-01
+                                    </p>
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- На очень маленьких экранах - только телефон (кликабельный) -->
+                    <div class="sm:hidden flex items-center space-x-2">
+                        <i class="fas fa-phone text-blue-500 text-sm"></i>
+                        <div class="text-left">
+                            <a href="tel:+79114430101" class="contact-link">
+                                <p class="text-sm font-bold text-blue-600 leading-tight hover:text-blue-700">
+                                    8 (911) 443-01-01
+                                </p>
+                            </a>
+                        </div>
+                    </div>
+                    
+                    <!-- Кнопка мобильного меню -->
+                    <button @click="isMobileMenuOpen = !isMobileMenuOpen" class="text-gray-700 hover:text-blue-600 p-2">
+                        <i x-show="!isMobileMenuOpen" class="fas fa-bars text-xl"></i>
+                        <i x-show="isMobileMenuOpen" class="fas fa-times text-xl"></i>
+                    </button>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Упрощенное мобильное меню с тенью (только навигация) -->
+    <div x-show="isMobileMenuOpen" 
+         x-transition:enter="transition ease-out duration-300"
+         x-transition:enter-start="opacity-0 -translate-x-4"
+         x-transition:enter-end="opacity-100 translate-x-0"
+         x-transition:leave="transition ease-in duration-200"
+         x-transition:leave-start="opacity-100 translate-x-0"
+         x-transition:leave-end="opacity-0 -translate-x-4"
+         class="lg:hidden fixed top-16 left-0 right-0 bg-white py-2 max-h-[calc(100vh-4rem)] overflow-y-auto z-40 shadow-lg"
+         @click.away="isMobileMenuOpen = false">
+        
+        <!-- Только навигация -->
+        <div class="py-2">
+            <a href="#" @click="isMobileMenuOpen = false" class="block px-6 py-3 text-gray-700 hover:text-blue-600 font-medium">Главная</a>
+            <a href="#services" @click="isMobileMenuOpen = false" class="block px-6 py-3 text-gray-700 hover:text-blue-600 font-medium">Услуги</a>
+            <a href="#process" @click="isMobileMenuOpen = false" class="block px-6 py-3 text-gray-700 hover:text-blue-600 font-medium">Процесс работы</a>
+            <a href="#projects" @click="isMobileMenuOpen = false" class="block px-6 py-3 text-gray-700 hover:text-blue-600 font-medium">Наши проекты</a>
+            <a href="#pricing" @click="isMobileMenuOpen = false" class="block px-6 py-3 text-gray-700 hover:text-blue-600 font-medium">Стоимость</a>
+            <a href="#footer" @click="isMobileMenuOpen = false" class="block px-6 py-3 text-gray-700 hover:text-blue-600 font-medium">Контакты</a>
+        </div>
+    </div>
+
+    <!-- Hero секция с адаптивным порядком -->
+    <section id="hero" class="py-8 lg:py-20 bg-white">
+        <div class="container mx-auto px-4">
+            <!-- На мобильных: изображение сверху, текст снизу -->
+            <div class="flex flex-col lg:flex-row items-center gap-8 lg:gap-16">
+                <!-- Изображение справа на десктопе, сверху на мобильных -->
+                <div class="w-full lg:w-1/2 order-1 lg:order-2">
+                    <div class="hero-image-container">
+                        <!-- Используем HTML img вместо CSS background -->
+                        <img src="OME7ZU0.jpg" 
+                             alt="Профессиональная газификация частных домов" 
+                             class="hero-image"
+                             onerror="this.onerror=null; this.src='https://images.unsplash.com/photo-1600596542815-ffad4c1539a9?ixlib=rb-4.0.3&auto=format&fit=crop&w=1200&q=80';">
+                    </div>
+                </div>
+                
+                <!-- Текстовая часть слева на десктопе, снизу на мобильных -->
+                <div class="w-full lg:w-1/2 order-2 lg:order-1">
+                    <!-- Заголовок -->
+                    <h1 class="text-2xl sm:text-3xl lg:text-4xl font-heading text-gray-900 mb-3 lg:mb-4 leading-tight">
+                        Профессиональная газификация домов 
+                        <span class="text-blue-600">под ключ</span>
+                    </h1>
+                    
+                    <!-- Блок с подчеркиванием экспертизы и USP -->
+                    <div class="border-l-4 border-blue-500 pl-4 mb-4 lg:mb-6">
+                        <p class="text-base lg:text-lg text-gray-800 italic">
+                            Проектирование и монтаж газопроводов 
+                            <span class="font-semibold text-blue-600 not-italic">в Вологде и Вологодской области</span>
+                            <br class="hidden sm:block">
+                            <span class="text-gray-600">— знаем все особенности местных норм</span>
+                        </p>
+                    </div>
+                    
+                    <!-- Преимущества -->
+                    <div class="space-y-3 lg:space-y-4 mb-8 lg:mb-10">
+                        <div class="flex items-center">
+                            <div class="w-6 h-6 bg-green-100 rounded-full flex items-center justify-center mr-3 lg:mr-4 flex-shrink-0">
+                                <i class="fas fa-check text-green-600 text-xs"></i>
+                            </div>
+                            <p class="text-gray-700 text-sm lg:text-base">Опыт 12+ лет в газификации частных домов</p>
+                        </div>
+                        <div class="flex items-center">
+                            <div class="w-6 h-6 bg-green-100 rounded-full flex items-center justify-center mr-3 lg:mr-4 flex-shrink-0">
+                                <i class="fas fa-check text-green-600 text-xs"></i>
+                            </div>
+                            <p class="text-gray-700 text-sm lg:text-base">450+ успешно реализованных объектов</p>
+                        </div>
+                        <div class="flex items-center">
+                            <div class="w-6 h-6 bg-green-100 rounded-full flex items-center justify-center mr-3 lg:mr-4 flex-shrink-0">
+                                <i class="fas fa-check text-green-600 text-xs"></i>
+                            </div>
+                            <p class="text-gray-700 text-sm lg:text-base">Бесплатный выезд инженера и расчет сметы</p>
+                        </div>
+                        <div class="flex items-center">
+                            <div class="w-6 h-6 bg-green-100 rounded-full flex items-center justify-center mr-3 lg:mr-4 flex-shrink-0">
+                                <i class="fas fa-check text-green-600 text-xs"></i>
+                            </div>
+                            <p class="text-gray-700 text-sm lg:text-base">От проекта до сдачи с гарантией 12 месяцев на все работы</p>
+                        </div>
+                    </div>
+                    
+                    <!-- Кнопка -->
+                    <div class="mt-6 lg:mt-0">
+                        <button @click="isModalOpen = true" 
+                                class="consult-btn text-white font-semibold py-3 px-6 rounded-lg text-sm lg:text-base w-full sm:w-auto">
+                            <i class="fas fa-paper-plane mr-2"></i>Оставить заявку
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Секция "Услуги" -->
+    <section id="services" class="py-12 lg:py-20 bg-white">
+        <div class="container mx-auto px-4">
+            <!-- Заголовок секции -->
+            <div class="text-center mb-12 lg:mb-16">
+                <h2 class="text-2xl lg:text-3xl font-heading text-gray-900 mb-4">
+                    Наши услуги
+                </h2>
+                <!-- Разделитель -->
+                <div class="w-32 h-0.5 bg-gray-200 mx-auto mb-6"></div>
+                <p class="text-lg text-gray-600 max-w-2xl mx-auto">
+                    Полный комплекс услуг по инженерным системам для частных домов
+                </p>
+            </div>
+            
+            <!-- Карточки услуг -->
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+                <!-- Услуга 1: Проектирование и монтаж газопроводов -->
+                <div class="bg-gradient-to-b from-white to-blue-50/50 border-gradient-to-b from-white to-blue-50/50 rounded-xl p-6 transition-all duration-300">
+                    <div class="w-12 h-12 rounded-lg flex items-center justify-center mb-5 mx-auto">
+                        <i class="fas fa-fire text-blue-600 text-2xl"></i>
+                    </div>
+                    <h3 class="font-heading text-gray-800 text-xl mb-4 text-center">
+                        Проектирование и монтаж газопроводов
+                    </h3>
+                    <ul class="space-y-3 text-gray-700">
+                        <li class="flex items-start">
+                            <i class="fas fa-check text-green-500 text-sm mt-1 mr-3"></i>
+                            <span>Проектирование наружных и внутренных газопроводов</span>
+                        </li>
+                        <li class="flex items-start">
+                            <i class="fas fa-check text-green-500 text-sm mt-1 mr-3"></i>
+                            <span>Монтаж газовых котлов и колонок</span>
+                        </li>
+                        <li class="flex items-start">
+                            <i class="fas fa-check text-green-500 text-sm mt-1 mr-3"></i>
+                            <span>Подключение газового оборудования</span>
+                        </li>
+                        <li class="flex items-start">
+                            <i class="fas fa-check text-green-500 text-sm mt-1 mr-3"></i>
+                            <span>Согласование проектов в контролирующих органах</span>
+                        </li>
+                        <li class="flex items-start">
+                            <i class="fas fa-check text-green-500 text-sm mt-1 mr-3"></i>
+                            <span>Сдача объекта "под ключ" с гарантией</span>
+                        </li>
+                    </ul>
+                </div>
+                
+                <!-- Услуга 2: Монтаж систем отопления и водоснабжения -->
+                <div class="bg-gradient-to-b from-white to-blue-50/50 border-gradient-to-b from-white to-blue-50/50 rounded-xl p-6 transition-all duration-300">
+                    <div class="w-12 h-12 rounded-lg flex items-center justify-center mb-5 mx-auto">
+                        <i class="fas fa-temperature-high text-blue-600 text-2xl"></i>
+                    </div>
+                    <h3 class="font-heading text-gray-800 text-xl mb-4 text-center">
+                        Монтаж систем отопления и водоснабжения
+                    </h3>
+                    <ul class="space-y-3 text-gray-700">
+                        <li class="flex items-start">
+                            <i class="fas fa-check text-green-500 text-sm mt-1 mr-3"></i>
+                            <span>Проектирование систем отопления любой сложности</span>
+                        </li>
+                        <li class="flex items-start">
+                            <i class="fas fa-check text-green-500 text-sm mt-1 mr-3"></i>
+                            <span>Монтаж радиаторов, теплых полов, конвекторов</span>
+                        </li>
+                        <li class="flex items-start">
+                            <i class="fas fa-check text-green-500 text-sm mt-1 mr-3"></i>
+                            <span>Установка котлов отопления (газовых, электрических)</span>
+                        </li>
+                        <li class="flex items-start">
+                            <i class="fas fa-check text-green-500 text-sm mt-1 mr-3"></i>
+                            <span>Монтаж систем водоснабжения и канализации</span>
+                        </li>
+                        <li class="flex items-start">
+                            <i class="fas fa-check text-green-500 text-sm mt-1 mr-3"></i>
+                            <span>Обвязка бойлеров и насосных станций</span>
+                        </li>
+                    </ul>
+                </div>
+                
+                <!-- Услуга 3: Обследование и монтаж вентиляции -->
+                <div class="bg-gradient-to-b from-white to-blue-50/50 border-gradient-to-b from-white to-blue-50/50 rounded-xl p-6 transition-all duration-300">
+                    <div class="w-12 h-12 rounded-lg flex items-center justify-center mb-5 mx-auto">
+                        <i class="fas fa-wind text-blue-600 text-2xl"></i>
+                    </div>
+                    <h3 class="font-heading text-gray-800 text-xl mb-4 text-center">
+                        Обследование и<br>монтаж вентиляции
+                    </h3>
+                    <ul class="space-y-3 text-gray-700">
+                        <li class="flex items-start">
+                            <i class="fas fa-check text-green-500 text-sm mt-1 mr-3"></i>
+                            <span>Техническое обследование существующих систем</span>
+                        </li>
+                        <li class="flex items-start">
+                            <i class="fas fa-check text-green-500 text-sm mt-1 mr-3"></i>
+                            <span>Проектирование приточно-вытяжной вентиляции</span>
+                        </li>
+                        <li class="flex items-start">
+                            <i class="fas fa-check text-green-500 text-sm mt-1 mr-3"></i>
+                            <span>Монтаж вентиляционных каналов и оборудования</span>
+                        </li>
+                        <li class="flex items-start">
+                            <i class="fas fa-check text-green-500 text-sm mt-1 mr-3"></i>
+                            <span>Установка рекуператоров и вентиляторов</span>
+                        </li>
+                        <li class="flex items-start">
+                            <i class="fas fa-check text-green-500 text-sm mt-1 mr-3"></i>
+                            <span>Пусконаладочные работы и тестирование систем</span>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Секция "Процесс работы" -->
+    <section id="process" class="py-12 lg:py-20 bg-white">
+        <div class="container mx-auto px-4">
+            <!-- Заголовок секции -->
+            <div class="text-center mb-12 lg:mb-16">
+                <h2 class="text-2xl lg:text-3xl font-heading text-gray-900 mb-4">
+                    Процесс работы
+                </h2>
+                <!-- Разделитель -->
+                <div class="w-32 h-0.5 bg-gray-200 mx-auto mb-6"></div>
+                <p class="text-lg text-gray-600 max-w-2xl mx-auto">
+                    6 этапов газификации вашего дома под ключ
+                </p>
+            </div>
+            
+            <!-- Горизонтальные карточки с иконками -->
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+                <!-- Этап 1 -->
+                <div class="stage-card bg-gradient-to-b from-white to-blue-50/50 border-gradient-to-b from-white to-blue-50/50 rounded-xl p-6 transition-all duration-300">
+                    <div class="stage-card-content">
+                        <!-- Номер этапа и время в левом верхнем углу -->
+                        <div class="flex items-center gap-2 mb-4">
+                            <span class="text-blue-600 font-bold">Этап 1</span>
+                            <span class="text-gray-400">•</span>
+                            <span class="text-gray-600 font-medium">1 день</span>
+                        </div>
+                        
+                        <!-- Иконка по центру -->
+                        <div class="w-12 h-12 rounded-lg flex items-center justify-center mb-5 mx-auto">
+                            <i class="fas fa-file-alt text-blue-600 text-2xl"></i>
+                        </div>
+                        
+                        <!-- Название этапа -->
+                        <h3 class="font-heading text-gray-800 text-xl mb-4 text-center">
+                            Сбор документов
+                        </h3>
+                        
+                        <!-- Описание -->
+                        <p class="text-gray-700 text-center">
+                            Подготавливаем доверенность, проверяем комплектность документов, собираем заявку на технические условия
+                        </p>
+                    </div>
+                    
+                    <!-- Кнопка -->
+                    <div class="stage-card-button-container">
+                        <div class="text-center">
+                            <button @click="isModalOpen = true" 
+                                    class="text-blue-600 hover:text-blue-800 font-medium text-sm inline-flex items-center gap-2">
+                                <span>Узнать о документах</span>
+                                <i class="fas fa-arrow-right text-xs"></i>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Этап 2 -->
+                <div class="stage-card bg-gradient-to-b from-white to-blue-50/50 border-gradient-to-b from-white to-blue-50/50 rounded-xl p-6 transition-all duration-300">
+                    <div class="stage-card-content">
+                        <!-- Номер этапа и время в левом верхнем углу -->
+                        <div class="flex items-center gap-2 mb-4">
+                            <span class="text-blue-600 font-bold">Этап 2</span>
+                            <span class="text-gray-400">•</span>
+                            <span class="text-gray-600 font-medium">25 дней</span>
+                        </div>
+                        
+                        <!-- Иконка по центру -->
+                        <div class="w-12 h-12 rounded-lg flex items-center justify-center mb-5 mx-auto">
+                            <i class="fas fa-handshake text-blue-600 text-2xl"></i>
+                        </div>
+                        
+                        <!-- Название этапа -->
+                        <h3 class="font-heading text-gray-800 text-xl mb-4 text-center">
+                            Договор подключения
+                        </h3>
+                        
+                        <!-- Описание -->
+                        <p class="text-gray-700 text-center">
+                            Подаем документы в Газпром, контролируем сроки, получаем и передаем документы без очередей
+                        </p>
+                    </div>
+                    
+                    <!-- Кнопка -->
+                    <div class="stage-card-button-container">
+                        <div class="text-center">
+                            <button @click="isModalOpen = true" 
+                                    class="text-blue-600 hover:text-blue-800 font-medium text-sm inline-flex items-center gap-2">
+                                <span>Получить ТУ за 1000₽</span>
+                                <i class="fas fa-arrow-right text-xs"></i>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Этап 3 -->
+                <div class="stage-card bg-gradient-to-b from-white to-blue-50/50 border-gradient-to-b from-white to-blue-50/50 rounded-xl p-6 transition-all duration-300">
+                    <div class="stage-card-content">
+                        <!-- Номер этапа и время в левом верхнем углу -->
+                        <div class="flex items-center gap-2 mb-4">
+                            <span class="text-blue-600 font-bold">Этап 3</span>
+                            <span class="text-gray-400">•</span>
+                            <span class="text-gray-600 font-medium">25 дней</span>
+                        </div>
+                        
+                        <!-- Иконка по центру -->
+                        <div class="w-12 h-12 rounded-lg flex items-center justify-center mb-5 mx-auto">
+                            <i class="fas fa-drafting-compass text-blue-600 text-2xl"></i>
+                        </div>
+                        
+                        <!-- Название этапа -->
+                        <h3 class="font-heading text-gray-800 text-xl mb-4 text-center">
+                            Разработка проекта
+                        </h3>
+                        
+                        <!-- Описание -->
+                        <p class="text-gray-700 text-center">
+                            Выезжаем на объект, разрабатываем проект под Ваши пожелания, согласовываем в Газпроме
+                        </p>
+                    </div>
+                    
+                    <!-- Кнопка -->
+                    <div class="stage-card-button-container">
+                        <div class="text-center">
+                            <button @click="isModalOpen = true" 
+                                    class="text-blue-600 hover:text-blue-800 font-medium text-sm inline-flex items-center gap-2">
+                                <span>Заказать проект</span>
+                                <i class="fas fa-arrow-right text-xs"></i>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Этап 4 -->
+                <div class="stage-card bg-gradient-to-b from-white to-blue-50/50 border-gradient-to-b from-white to-blue-50/50 rounded-xl p-6 transition-all duration-300">
+                    <div class="stage-card-content">
+                        <!-- Номер этапа и время в левом верхнем углу -->
+                        <div class="flex items-center gap-2 mb-4">
+                            <span class="text-blue-600 font-bold">Этап 4</span>
+                            <span class="text-gray-400">•</span>
+                            <span class="text-gray-600 font-medium">2 дня</span>
+                        </div>
+                        
+                        <!-- Иконка по центру -->
+                        <div class="w-12 h-12 rounded-lg flex items-center justify-center mb-5 mx-auto">
+                            <i class="fas fa-tools text-blue-600 text-2xl"></i>
+                        </div>
+                        
+                        <!-- Название этапа -->
+                        <h3 class="font-heading text-gray-800 text-xl mb-4 text-center">
+                            Монтаж "под ключ"
+                        </h3>
+                        
+                        <!-- Описание -->
+                        <p class="text-gray-700 text-center">
+                            Закупаем материалы, выполняем монтаж по проекту, проводим испытания газопровода
+                        </p>
+                    </div>
+                    
+                    <!-- Кнопка -->
+                    <div class="stage-card-button-container">
+                        <div class="text-center">
+                            <button @click="isModalOpen = true" 
+                                    class="text-blue-600 hover:text-blue-800 font-medium text-sm inline-flex items-center gap-2">
+                                <span>Обсудить проект</span>
+                                <i class="fas fa-arrow-right text-xs"></i>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Этап 5 -->
+                <div class="stage-card bg-gradient-to-b from-white to-blue-50/50 border-gradient-to-b from-white to-blue-50/50 rounded-xl p-6 transition-all duration-300">
+                    <div class="stage-card-content">
+                        <!-- Номер этапа и время в левом верхнем углу -->
+                        <div class="flex items-center gap-2 mb-4">
+                            <span class="text-blue-600 font-bold">Этап 5</span>
+                            <span class="text-gray-400">•</span>
+                            <span class="text-gray-600 font-medium">2 дня</span>
+                        </div>
+                        
+                        <!-- Иконка по центру -->
+                        <div class="w-12 h-12 rounded-lg flex items-center justify-center mb-5 mx-auto">
+                            <i class="fas fa-clipboard-check text-blue-600 text-2xl"></i>
+                        </div>
+                        
+                        <!-- Название этапа -->
+                        <h3 class="font-heading text-gray-800 text-xl mb-4 text-center">
+                            Сдача Газпрому
+                        </h3>
+                        
+                        <!-- Описание -->
+                        <p class="text-gray-700 text-center">
+                            Даем рекомендации, присутствуем при приемке, помогаем решать спорные вопросы
+                        </p>
+                    </div>
+                    
+                    <!-- Кнопка -->
+                    <div class="stage-card-button-container">
+                        <div class="text-center">
+                            <button @click="isModalOpen = true" 
+                                    class="text-blue-600 hover:text-blue-800 font-medium text-sm inline-flex items-center gap-2">
+                                <span>Газифицировать дом</span>
+                                <i class="fas fa-arrow-right text-xs"></i>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Этап 6 -->
+                <div class="stage-card bg-gradient-to-b from-white to-blue-50/50 border-gradient-to-b from-white to-blue-50/50 rounded-xl p-6 transition-all duration-300">
+                    <div class="stage-card-content">
+                        <!-- Номер этапа и время в левом верхнем углу -->
+                        <div class="flex items-center gap-2 mb-4">
+                            <span class="text-blue-600 font-bold">Этап 6</span>
+                            <span class="text-gray-400">•</span>
+                            <span class="text-gray-600 font-medium">35 дней</span>
+                        </div>
+                        
+                        <!-- Иконка по центру -->
+                        <div class="w-12 h-12 rounded-lg flex items-center justify-center mb-5 mx-auto">
+                            <i class="fas fa-folder-open text-blue-600 text-2xl"></i>
+                        </div>
+                        
+                        <!-- Название этапа -->
+                        <h3 class="font-heading text-gray-800 text-xl mb-4 text-center">
+                            Оформление документов
+                        </h3>
+                        
+                        <!-- Описание -->
+                        <p class="text-gray-700 text-center">
+                            Собираем исполнительную документацию, готовим дополнительные документы, исправляем замечания
+                        </p>
+                    </div>
+                    
+                    <!-- Кнопка -->
+                    <div class="stage-card-button-container">
+                        <div class="text-center">
+                            <button @click="isModalOpen = true" 
+                                    class="text-blue-600 hover:text-blue-800 font-medium text-sm inline-flex items-center gap-2">
+                                <span>Завершить газификацию</span>
+                                <i class="fas fa-arrow-right text-xs"></i>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+<!-- Секция "Наши проекты" -->
+<section id="projects" class="py-12 lg:py-20 bg-white">
+    <div class="container mx-auto px-4">
+        <!-- Заголовок секции -->
+        <div class="text-center mb-12 lg:mb-16">
+            <h2 class="text-2xl lg:text-3xl font-heading text-gray-900 mb-4">
+                Наши проекты
+            </h2>
+            <!-- Разделитель -->
+            <div class="w-32 h-0.5 bg-gray-200 mx-auto mb-6"></div>
+            <p class="text-lg text-gray-600 max-w-2xl mx-auto">
+                Последние реализованные объекты газификации в Вологде и Вологодской области
+            </p>
+        </div>
+
+        <!-- Сетка проектов -->
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 lg:gap-8">
+            <!-- Проект 1 -->
+            <div class="bg-gradient-to-b from-white to-blue-50/50 from-white to-blue-50/50 rounded-xl overflow-hidden transition-all duration-300">
+                <div class="relative overflow-hidden h-48">
+                    <img src="https://gi-gas.ru/upload/iblock/c62/0vnvkk7xil8gwvxq618ki96m213nxr25/WhatsApp%20Image%202025-10-17%20at%2014.54.22%20(8)+.jpg" 
+                         alt="Дом в Соколе"
+                         class="w-full h-full object-cover transition-transform duration-500 hover:scale-105">
+                </div>
+                <div class="p-5 lg:p-6">
+                    <h3 class="font-heading text-gray-800 text-lg mb-3">Дом в Соколе</h3>
+                    <div class="space-y-2 text-sm text-gray-600 mb-4">
+                        <div class="flex items-center">
+                            <i class="fas fa-ruler-combined text-gray-400 mr-2 w-5"></i>
+                            <span>Площадь: 150 м²</span>
+                        </div>
+                        <div class="flex items-center">
+                            <i class="fas fa-calendar-alt text-gray-400 mr-2 w-5"></i>
+                            <span>Срок: 4 месяца</span>
+                        </div>
+                        <div class="flex items-center">
+                            <i class="fas fa-fire text-gray-400 mr-2 w-5"></i>
+                            <span>Котел: 24 кВт</span>
+                        </div>
+                        <div class="flex items-center">
+                            <i class="fas fa-road text-gray-400 mr-2 w-5"></i>
+                            <span>Длина газопровода: 35 м</span>
+                        </div>
+                    </div>
+                    <p class="text-gray-700 text-sm">
+                        Полная газификация частного дома с монтажом системы отопления и подключением газового котла.
+                    </p>
+                </div>
+            </div>
+
+            <!-- Проект 2 -->
+            <div class="bg-gradient-to-b from-white to-blue-50/50 from-white to-blue-50/50 rounded-xl overflow-hidden transition-all duration-300">
+                <div class="relative overflow-hidden h-48">
+                    <img src="https://gi-gas.ru/upload/iblock/6af/rhlbxfb7c8b8u2ubec0c81htkkv1mp5y/20250909_131658+.jpg" 
+                         alt="Коттедж в Молочном"
+                         class="w-full h-full object-cover transition-transform duration-500 hover:scale-105">
+                </div>
+                <div class="p-5 lg:p-6">
+                    <h3 class="font-heading text-gray-800 text-lg mb-3">Коттедж в Молочном</h3>
+                    <div class="space-y-2 text-sm text-gray-600 mb-4">
+                        <div class="flex items-center">
+                            <i class="fas fa-ruler-combined text-gray-400 mr-2 w-5"></i>
+                            <span>Площадь: 220 м²</span>
+                        </div>
+                        <div class="flex items-center">
+                            <i class="fas fa-calendar-alt text-gray-400 mr-2 w-5"></i>
+                            <span>Срок: 5 месяцев</span>
+                        </div>
+                        <div class="flex items-center">
+                            <i class="fas fa-fire text-gray-400 mr-2 w-5"></i>
+                            <span>Котел: 32 кВт + бойлер</span>
+                        </div>
+                        <div class="flex items-center">
+                            <i class="fas fa-road text-gray-400 mr-2 w-5"></i>
+                            <span>Длина газопровода: 50 м</span>
+                        </div>
+                    </div>
+                    <p class="text-gray-700 text-sm">
+                        Газификация двухэтажного коттеджа с системой теплых полов и ГВС. Автономная котельная.
+                    </p>
+                </div>
+            </div>
+
+            <!-- Проект 3 -->
+            <div class="bg-gradient-to-b from-white to-blue-50/50 from-white to-blue-50/50 rounded-xl overflow-hidden transition-all duration-300">
+                <div class="relative overflow-hidden h-48">
+                    <img src="https://gi-gas.ru/upload/iblock/4fc/wd83o15qp8jgtw61ylkvm5qjhlavgl2d/nkcvksu4smoswccosos.jpg" 
+                         alt="Усадьба в Грязовце"
+                         class="w-full h-full object-cover transition-transform duration-500 hover:scale-105">
+                </div>
+                <div class="p-5 lg:p-6">
+                    <h3 class="font-heading text-gray-800 text-lg mb-3">Усадьба в Грязовце</h3>
+                    <div class="space-y-2 text-sm text-gray-600 mb-4">
+                        <div class="flex items-center">
+                            <i class="fas fa-ruler-combined text-gray-400 mr-2 w-5"></i>
+                            <span>Площадь: 180 м²</span>
+                        </div>
+                        <div class="flex items-center">
+                            <i class="fas fa-calendar-alt text-gray-400 mr-2 w-5"></i>
+                            <span>Срок: 3.5 месяца</span>
+                        </div>
+                        <div class="flex items-center">
+                            <i class="fas fa-fire text-gray-400 mr-2 w-5"></i>
+                            <span>Котел: 28 кВт + камин</span>
+                        </div>
+                        <div class="flex items-center">
+                            <i class="fas fa-road text-gray-400 mr-2 w-5"></i>
+                            <span>Длина газопровода: 80 м</span>
+                        </div>
+                    </div>
+                    <p class="text-gray-700 text-sm">
+                        Газификация загородной усадьбы с подключением газового камина и монтажом вентиляции.
+                    </p>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Секция "Стоимость" -->
+<section id="pricing" class="py-12 lg:py-20 bg-white">
+    <div class="container mx-auto px-4">
+        <!-- Заголовок секции -->
+        <div class="text-center mb-12 lg:mb-16">
+            <h2 class="text-2xl lg:text-3xl font-heading text-gray-900 mb-4">
+                Стоимость газификации
+            </h2>
+            <!-- Разделитель -->
+            <div class="w-32 h-0.5 bg-gray-200 mx-auto mb-6"></div>
+            <p class="text-lg text-gray-600 max-w-2xl mx-auto">
+                Индивидуальный расчет для каждого проекта. Цена зависит от множества факторов
+            </p>
+        </div>
+
+        <div class="flex flex-col lg:flex-row items-stretch gap-8 lg:gap-12">
+            <!-- Левая часть: Факторы стоимости -->
+            <div class="lg:w-1/2">
+                <div class="bg-gradient-to-b from-white to-blue-50/50 rounded-xl p-6 lg:p-8 bd-gradient-to-b from-white to-blue-50/50 h-full">
+                    <h3 class="font-heading text-gray-800 text-xl lg:text-2xl mb-6 text-center lg:text-left">
+                        Что влияет на стоимость
+                    </h3>
+                    
+                    <div class="space-y-6">
+                        <!-- Фактор 1 -->
+                        <div class="flex items-start">
+                            <div class="w-10 h-10 bg-blue-100 rounded-lg flex items-center justify-center mr-4 flex-shrink-0">
+                                <i class="fas fa-ruler text-blue-600"></i>
+                            </div>
+                            <div>
+                                <h4 class="font-medium text-gray-800 mb-1">Длина газопровода</h4>
+                                <p class="text-gray-600 text-sm">
+                                    Расстояние от магистрали до дома. Каждый метр трубы увеличивает стоимость материалов и работ.
+                                </p>
+                            </div>
+                        </div>
+
+                        <!-- Фактор 2 -->
+                        <div class="flex items-start">
+                            <div class="w-10 h-10 bg-blue-100 rounded-lg flex items-center justify-center mr-4 flex-shrink-0">
+                                <i class="fas fa-mountain text-blue-600"></i>
+                            </div>
+                            <div>
+                                <h4 class="font-medium text-gray-800 mb-1">Рельеф участка</h4>
+                                <p class="text-gray-600 text-sm">
+                                    Перепады высот, наличие препятствий, тип грунта. Сложный рельеф требует дополнительных работ.
+                                </p>
+                            </div>
+                        </div>
+
+                        <!-- Фактор 3 -->
+                        <div class="flex items-start">
+                            <div class="w-10 h-10 bg-blue-100 rounded-lg flex items-center justify-center mr-4 flex-shrink-0">
+                                <i class="fas fa-home text-blue-600"></i>
+                            </div>
+                            <div>
+                                <h4 class="font-medium text-gray-800 mb-1">Площадь дома</h4>
+                                <p class="text-gray-600 text-sm">
+                                    Чем больше дом, тем мощнее требуется котел и сложнее система отопления.
+                                </p>
+                            </div>
+                        </div>
+
+                        <!-- Фактор 4 -->
+                        <div class="flex items-start">
+                            <div class="w-10 h-10 bg-blue-100 rounded-lg flex items-center justify-center mr-4 flex-shrink-0">
+                                <i class="fas fa-fire text-blue-600"></i>
+                            </div>
+                            <div>
+                                <h4 class="font-medium text-gray-800 mb-1">Оборудование</h4>
+                                <p class="text-gray-600 text-sm">
+                                    Тип котла, наличие бойлера, теплых полов, дополнительных точек потребления газа.
+                                </p>
+                            </div>
+                        </div>
+
+                        <!-- Фактор 5 -->
+                        <div class="flex items-start">
+                            <div class="w-10 h-10 bg-blue-100 rounded-lg flex items-center justify-center mr-4 flex-shrink-0">
+                                <i class="fas fa-file-alt text-blue-600"></i>
+                            </div>
+                            <div>
+                                <h4 class="font-medium text-gray-800 mb-1">Сложность проекта</h4>
+                                <p class="text-gray-600 text-sm">
+                                    Наличие котельной, разводка по этажам, требования к дизайну и скрытому монтажу.
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Правая часть: Индивидуальный расчет -->
+            <div class="lg:w-1/2">
+                <div class="bg-gradient-to-b from-white to-blue-50/50 rounded-xl p-6 lg:p-8 bd-gradient-to-b from-white to-blue-50/50 h-full">
+                    <div class="flex flex-col h-full">
+                        <!-- Верхняя часть с иконкой -->
+                        <div class="text-center mb-8">
+                            <div class="w-16 h-16 bg-blue-100 rounded-full flex items-center justify-center mx-auto mb-4">
+                                <i class="fas fa-calculator text-blue-600 text-2xl"></i>
+                            </div>
+                            <h3 class="font-heading text-gray-800 text-xl lg:text-2xl mb-3">
+                                Индивидуальный расчет
+                            </h3>
+                            <p class="text-gray-600">
+                                Получите точную смету под ваш проект
+                            </p>
+                        </div>
+
+                        <!-- Преимущества расчета -->
+                        <div class="mb-8 flex-1">
+                            <div class="space-y-4">
+                                <div class="flex items-start">
+                                    <div class="w-6 h-6 bg-green-100 rounded-full flex items-center justify-center mt-1 mr-3 flex-shrink-0">
+                                        <i class="fas fa-check text-green-600 text-xs"></i>
+                                    </div>
+                                    <p class="text-gray-700">Точная стоимость без скрытых платежей</p>
+                                </div>
+                                <div class="flex items-start">
+                                    <div class="w-6 h-6 bg-green-100 rounded-full flex items-center justify-center mt-1 mr-3 flex-shrink-0">
+                                        <i class="fas fa-check text-green-600 text-xs"></i>
+                                    </div>
+                                    <p class="text-gray-700">Учет всех особенностей вашего участка</p>
+                                </div>
+                                <div class="flex items-start">
+                                    <div class="w-6 h-6 bg-green-100 rounded-full flex items-center justify-center mt-1 mr-3 flex-shrink-0">
+                                        <i class="fas fa-check text-green-600 text-xs"></i>
+                                    </div>
+                                    <p class="text-gray-700">Оптимальный подбор оборудования</p>
+                                </div>
+                                <div class="flex items-start">
+                                    <div class="w-6 h-6 bg-green-100 rounded-full flex items-center justify-center mt-1 mr-3 flex-shrink-0">
+                                        <i class="fas fa-check text-green-600 text-xs"></i>
+                                    </div>
+                                    <p class="text-gray-700">Прозрачное разделение затрат</p>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Блок с примерными ценами -->
+                        <div class="p-4 bg-blue-50 rounded-lg border border-blue-100">
+                            <div class="text-center">
+                                <p class="text-sm text-gray-600 mb-2">Средняя стоимость проектов</p>
+                                <div class="flex justify-center items-baseline space-x-2">
+                                    <span class="text-2xl font-bold text-blue-600">от 150 000 ₽</span>
+                                    <span class="text-gray-500">до</span>
+                                    <span class="text-2xl font-bold text-blue-600">500 000 ₽</span>
+                                </div>
+                                <p class="text-xs text-gray-500 mt-2">
+                                    *Окончательная цена определяется после выезда инженера
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Примечание с кнопкой -->
+        <div class="mt-12">
+            <div class="flex flex-col md:flex-row items-center justify-between p-4 lg:p-6 bg-gradient-to-b from-white to-blue-50/50 rounded-xl gap-4 md:gap-6">
+                <!-- Текст слева -->
+                <div class="flex items-start md:items-center">
+                    <i class="fas fa-info-circle text-blue-500 text-xl mt-1 md:mt-0 mr-4 flex-shrink-0"></i>
+                    <p class="text-gray-600 text-sm md:text-base">
+                        Мы не используем шаблонные калькуляторы. Каждый проект уникален и требует 
+                        профессиональной оценки инженера на месте.
+                    </p>
+                </div>
+                
+                <!-- Кнопка справа -->
+                <div class="flex-shrink-0">
+                    <button @click="isModalOpen = true" 
+                            class="bg-white border border-blue-600 text-blue-600 hover:bg-blue-50 font-semibold py-3 px-6 rounded-lg text-sm md:text-base transition duration-200 whitespace-nowrap">
+                        <i class="fas fa-calculator mr-2"></i>Заказать расчет
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+    
+        <!-- Секция "Частые ошибки" -->
+<section id="mistakes" class="py-12 lg:py-20 bg-white">
+    <div class="container mx-auto px-4">
+        <!-- Заголовок секции -->
+        <div class="text-center mb-12 lg:mb-16">
+            <h2 class="text-2xl lg:text-3xl font-heading text-gray-900 mb-4">
+                5 частых ошибок при газификации дома
+            </h2>
+            <!-- Разделитель -->
+            <div class="w-32 h-0.5 bg-gray-200 mx-auto mb-6"></div>
+            <p class="text-lg text-gray-600 max-w-2xl mx-auto">
+                Избегайте этих ошибок, чтобы сэкономить время, деньги и нервы
+            </p>
+        </div>
+
+        <!-- Ошибки в виде карточек -->
+        <div class="grid grid-cols-1 lg:grid-cols-2 gap-8 mb-12">
+            <!-- Ошибка 1 -->
+            <div class="bg-gradient-to-b from-white to-blue-50/50 border-gradient-to-b from-white to-blue-50/50 rounded-xl p-6 transition-all duration-300">
+                <div class="flex items-start mb-4">
+                    <div class="w-10 h-10 bg-red-100 rounded-full flex items-center justify-center mr-4 flex-shrink-0">
+                        <span class="text-red-600 font-bold">1</span>
+                    </div>
+                    <h3 class="font-heading text-gray-800 text-xl">
+                        Неправильный расчет мощности оборудования
+                    </h3>
+                </div>
+                <div class="ml-14">
+                    <p class="text-gray-700 mb-3">
+                        Многие выбирают котел "на глаз", не учитывая теплопотери дома, что приводит к:
+                    </p>
+                    <ul class="space-y-2 text-gray-600">
+                        <li class="flex items-start">
+                            <i class="fas fa-times text-red-400 text-sm mt-1 mr-2"></i>
+                            <span>Перерасход газа (если котел слишком мощный)</span>
+                        </li>
+                        <li class="flex items-start">
+                            <i class="fas fa-times text-red-400 text-sm mt-1 mr-2"></i>
+                            <span>Недостаток тепла зимой (если котел слабый)</span>
+                        </li>
+                        <li class="flex items-start">
+                            <i class="fas fa-times text-red-400 text-sm mt-1 mr-2"></i>
+                            <span>Частые поломки из-за постоянной работы на пределе</span>
+                        </li>
+                    </ul>
+                    <div class="mt-4 p-3 bg-green-50 rounded-lg border border-green-100">
+                        <p class="text-gray-800 font-medium flex items-center">
+                            <i class="fas fa-lightbulb text-yellow-500 mr-2"></i>
+                            <span class="font-heading">Наше решение:</span>
+                        </p>
+                        <p class="text-gray-900 text-sm mt-1">
+                            Проводим тепловой расчет дома с учетом материалов стен, окон, климатической зоны
+                        </p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Ошибка 2 -->
+            <div class="bg-gradient-to-b from-white to-blue-50/50 border-gradient-to-b from-white to-blue-50/50 rounded-xl p-6 transition-all duration-300">
+                <div class="flex items-start mb-4">
+                    <div class="w-10 h-10 bg-red-100 rounded-full flex items-center justify-center mr-4 flex-shrink-0">
+                        <span class="text-red-600 font-bold">2</span>
+                    </div>
+                    <h3 class="font-heading text-gray-800 text-xl">
+                        Экономия на проектной документации
+                    </h3>
+                </div>
+                <div class="ml-14">
+                    <p class="text-gray-700 mb-3">
+                        Попытка сэкономить на проекте или сделать его "кустарно" приводит к:
+                    </p>
+                    <ul class="space-y-2 text-gray-600">
+                        <li class="flex items-start">
+                            <i class="fas fa-times text-red-400 text-sm mt-1 mr-2"></i>
+                            <span>Отказу в согласовании со стороны Газпрома</span>
+                        </li>
+                        <li class="flex items-start">
+                            <i class="fas fa-times text-red-400 text-sm mt-1 mr-2"></i>
+                            <span>Необходимости переделывать проект за дополнительную плату</span>
+                        </li>
+                        <li class="flex items-start">
+                            <i class="fas fa-times text-red-400 text-sm mt-1 mr-2"></i>
+                            <span>Задержкам на 1-2 месяца и штрафам</span>
+                        </li>
+                    </ul>
+                    <div class="mt-4 p-3 bg-green-50 rounded-lg border border-green-100">
+                        <p class="text-gray-800 font-medium flex items-center">
+                            <i class="fas fa-lightbulb text-yellow-500 mr-2"></i>
+                            <span class="font-heading">Наше решение:</span>
+                        </p>
+                        <p class="text-gray-800 text-sm mt-1">
+                            Лицензированные проектировщики с опытом согласования в Газпроме. Гарантия прохождения с первого раза
+                        </p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Ошибка 3 -->
+            <div class="bg-gradient-to-b from-white to-blue-50/50 border-gradient-to-b from-white to-blue-50/50 rounded-xl p-6 transition-all duration-300">
+                <div class="flex items-start mb-4">
+                    <div class="w-10 h-10 bg-red-100 rounded-full flex items-center justify-center mr-4 flex-shrink-0">
+                        <span class="text-red-600 font-bold">3</span>
+                    </div>
+                    <h3 class="font-heading text-gray-800 text-xl">
+                        Неправильное расположение оборудования
+                    </h3>
+                </div>
+                <div class="ml-14">
+                    <p class="text-gray-700 mb-3">
+                        Установка газового оборудования без учета нормативов безопасности:
+                    </p>
+                    <ul class="space-y-2 text-gray-600">
+                        <li class="flex items-start">
+                            <i class="fas fa-times text-red-400 text-sm mt-1 mr-2"></i>
+                            <span>Котел слишком близко к стенам или окнам</span>
+                        </li>
+                        <li class="flex items-start">
+                            <i class="fas fa-times text-red-400 text-sm mt-1 mr-2"></i>
+                            <span>Неправильная вентиляция котельной</span>
+                        </li>
+                        <li class="flex items-start">
+                            <i class="fas fa-times text-red-400 text-sm mt-1 mr-2"></i>
+                            <span>Нарушение путей эвакуации в случае аварии</span>
+                        </li>
+                    </ul>
+                    <div class="mt-4 p-3 bg-green-50 rounded-lg border border-green-100">
+                        <p class="text-gray-800 font-medium flex items-center">
+                            <i class="fas fa-lightbulb text-yellow-500 mr-2"></i>
+                            <span class="font-heading">Наше решение:</span>
+                        </p>
+                        <p class="text-gray-800 text-sm mt-1">
+                            Строгое соблюдение СНиП и ГОСТ. Проверка расположения оборудования перед монтажом
+                        </p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Ошибка 4 -->
+            <div class="bg-gradient-to-b from-white to-blue-50/50 border-gradient-to-b from-white to-blue-50/50 rounded-xl p-6 transition-all duration-300">
+                <div class="flex items-start mb-4">
+                    <div class="w-10 h-10 bg-red-100 rounded-full flex items-center justify-center mr-4 flex-shrink-0">
+                        <span class="text-red-600 font-bold">4</span>
+                    </div>
+                    <h3 class="font-heading text-gray-800 text-xl">
+                        Выбор некачественных материалов
+                    </h3>
+                </div>
+                <div class="ml-14">
+                    <p class="text-gray-700 mb-3">
+                        Попытка сэкономить на трубах, фитингах и запорной арматуре:
+                    </p>
+                    <ul class="space-y-2 text-gray-600">
+                        <li class="flex items-start">
+                            <i class="fas fa-times text-red-400 text-sm mt-1 mr-2"></i>
+                            <span>Коррозия труб уже через 2-3 года</span>
+                        </li>
+                        <li class="flex items-start">
+                            <i class="fas fa-times text-red-400 text-sm mt-1 mr-2"></i>
+                            <span>Утечки газа из-за некачественных соединений</span>
+                        </li>
+                        <li class="flex items-start">
+                            <i class="fas fa-times text-red-400 text-sm mt-1 mr-2"></i>
+                            <span>Аварийное отключение газа инспекторами</span>
+                        </li>
+                    </ul>
+                    <div class="mt-4 p-3 bg-green-50 rounded-lg border border-green-100">
+                        <p class="text-gray-800 font-medium flex items-center">
+                            <i class="fas fa-lightbulb text-yellow-500 mr-2"></i>
+                            <span class="font-heading">Наше решение:</span>
+                        </p>
+                        <p class="text-gray-800 text-sm mt-1">
+                            Используем только сертифицированные материалы от проверенных поставщиков с гарантией
+                        </p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Ошибка 5 -->
+            <div class="bg-gradient-to-b from-white to-blue-50/50 border-gradient-to-b from-white to-blue-50/50 rounded-xl p-6 transition-all duration-300">
+                <div class="flex items-start mb-4">
+                    <div class="w-10 h-10 bg-red-100 rounded-full flex items-center justify-center mr-4 flex-shrink-0">
+                        <span class="text-red-600 font-bold">5</span>
+                    </div>
+                    <h3 class="font-heading text-gray-800 text-xl">
+                        Самостоятельная сдача объекта в Газпром
+                    </h3>
+                </div>
+                <div class="ml-14">
+                    <p class="text-gray-700 mb-3">
+                        Попытка самостоятельно сдать объект без опыта взаимодействия с Газпромом:
+                    </p>
+                    <ul class="space-y-2 text-gray-600">
+                        <li class="flex items-start">
+                            <i class="fas fa-times text-red-400 text-sm mt-1 mr-2"></i>
+                            <span>Многократные отказы из-за мелких формальностей</span>
+                        </li>
+                        <li class="flex items-start">
+                            <i class="fas fa-times text-red-400 text-sm mt-1 mr-2"></i>
+                            <span>Очереди на приемку по 2-3 недели</span>
+                        </li>
+                        <li class="flex items-start">
+                            <i class="fas fa-times text-red-400 text-sm mt-1 mr-2"></i>
+                            <span>Незнание тонкостей требований конкретного инспектора</span>
+                        </li>
+                    </ul>
+                    <div class="mt-4 p-3 bg-green-50 rounded-lg border border-green-100">
+                        <p class="text-gray-800 font-medium flex items-center">
+                            <i class="fas fa-lightbulb text-yellow-500 mr-2"></i>
+                            <span class="font-heading">Наше решение:</span>
+                        </p>
+                        <p class="text-gray-800 text-sm mt-1">
+                            Полное сопровождение сдачи. Личное присутствие на приемке. Знаем всех инспекторов в области
+                        </p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Заключительный блок как шестая карточка -->
+<div class="bg-gradient-to-b from-white to-blue-50/50 border-gradient-to-b from-white to-blue-50/50 rounded-xl p-6 transition-all duration-300 flex flex-col h-full">
+    <div class="flex-1">
+        <div class="flex items-start mb-4">
+            <div class="w-10 h-10 bg-yellow-100 rounded-full flex items-center justify-center mr-4 flex-shrink-0">
+                <i class="fas fa-exclamation text-yellow-600 text-lg"></i>
+            </div>
+            <h3 class="font-heading text-gray-800 text-xl">
+                Важно помнить
+            </h3>
+        </div>
+        <div class="ml-14">
+            <p class="text-gray-700 mb-4">
+                Газификация дома — это технически сложный процесс с множеством нормативов и требований. 
+                Каждая из перечисленных ошибок может стоить вам дополнительных 
+                <span class="font-bold text-red-600">50 000 - 200 000 рублей</span> 
+                на переделку и потерю <span class="font-bold text-red-600">2-6 месяцев</span> времени. 
+                Доверяйте работу профессионалам с опытом и лицензиями.
+            </p>
+        </div>
+    </div>
+    
+    <!-- Кнопка прижата к низу, по центру -->
+    <div class="mt-auto pt-4">
+        <div class="text-center">
+            <button @click="isModalOpen = true" 
+                    class="consult-btn text-white font-semibold py-3 px-8 rounded-lg hover:shadow-lg transition-all duration-300 inline-block">
+                <i class="fas fa-shield-alt mr-2"></i>Избежать ошибок
+            </button>
+        </div>
+    </div>
+</div>
+        </div>
+    </div>
+</section>    
+    
+        <!-- Секция FAQ -->
+    <section id="faq" class="py-12 lg:py-20 bg-white">
+        <div class="container mx-auto px-4">
+            <!-- Заголовок секции -->
+            <div class="text-center mb-12 lg:mb-16">
+                <h2 class="text-2xl lg:text-3xl font-heading text-gray-900 mb-4">
+                    Часто задаваемые вопросы
+                </h2>
+                <!-- Разделитель -->
+                <div class="w-32 h-0.5 bg-gray-200 mx-auto mb-6"></div>
+                <p class="text-lg text-gray-600 max-w-2xl mx-auto">
+                    Ответы на самые популярные вопросы о газификации частных домов
+                </p>
+            </div>
+
+            <!-- Аккордеон FAQ -->
+            <div class="max-w-3xl mx-auto space-y-4" x-data="{ 
+                openFaq: null,
+                toggleFaq(id) {
+                    this.openFaq = this.openFaq === id ? null : id;
+                }
+            }">
+                <!-- Вопрос 1 -->
+                <div class="border border-gray-200 rounded-xl overflow-hidden">
+                    <button 
+                        @click="toggleFaq(1)"
+                        class="w-full px-6 py-5 text-left flex justify-between items-center bg-white hover:bg-gray-50 transition duration-200"
+                        :class="{ 'bg-gray-50': openFaq === 1 }">
+                        <span class="font-medium text-gray-800 text-lg">Сколько времени занимает полная газификация дома?</span>
+                        <i class="fas text-blue-600 transition-transform duration-300"
+                           :class="openFaq === 1 ? 'fa-chevron-up' : 'fa-chevron-down'"></i>
+                    </button>
+                    <div x-show="openFaq === 1" 
+                         x-collapse
+                         class="px-6 pb-5 pt-2 border-t border-gray-100">
+                        <p class="text-gray-700">
+                            Средний срок полной газификации дома "под ключ" составляет от 3 до 6 месяцев. Время зависит от сложности проекта, длины газопровода, удаленности от магистрали и согласований в контролирующих органах. Сам монтаж обычно занимает 1-2 недели, основное время уходит на получение разрешений и согласований.
+                        </p>
+                    </div>
+                </div>
+
+                <!-- Вопрос 2 -->
+                <div class="border border-gray-200 rounded-xl overflow-hidden">
+                    <button 
+                        @click="toggleFaq(2)"
+                        class="w-full px-6 py-5 text-left flex justify-between items-center bg-white hover:bg-gray-50 transition duration-200"
+                        :class="{ 'bg-gray-50': openFaq === 2 }">
+                        <span class="font-medium text-gray-800 text-lg">Какие документы нужны для подключения газа?</span>
+                        <i class="fas text-blue-600 transition-transform duration-300"
+                           :class="openFaq === 2 ? 'fa-chevron-up' : 'fa-chevron-down'"></i>
+                    </button>
+                    <div x-show="openFaq === 2" 
+                         x-collapse
+                         class="px-6 pb-5 pt-2 border-t border-gray-100">
+                        <p class="text-gray-700 mb-3">Основной пакет документов включает:</p>
+                        <ul class="text-gray-700 space-y-2">
+                            <li class="flex items-start">
+                                <i class="fas fa-check text-green-500 text-sm mt-1 mr-3"></i>
+                                <span>Правоустанавливающие документы на земельный участок и дом</span>
+                            </li>
+                            <li class="flex items-start">
+                                <i class="fas fa-check text-green-500 text-sm mt-1 mr-3"></i>
+                                <span>Технический паспорт БТИ на дом</span>
+                            </li>
+                            <li class="flex items-start">
+                                <i class="fas fa-check text-green-500 text-sm mt-1 mr-3"></i>
+                                <span>Ситуационный план участка (М 1:500)</span>
+                            </li>
+                            <li class="flex items-start">
+                                <i class="fas fa-check text-green-500 text-sm mt-1 mr-3"></i>
+                                <span>Паспортные данные заявителя</span>
+                            </li>
+                            <li class="flex items-start">
+                                <i class="fas fa-check text-green-500 text-sm mt-1 mr-3"></i>
+                                <span>Заявление на получение технических условий</span>
+                            </li>
+                        </ul>
+                        <p class="text-gray-700 mt-3">Мы помогаем собрать весь пакет документов и заполнить заявления.</p>
+                    </div>
+                </div>
+
+                <!-- Вопрос 3 -->
+                <div class="border border-gray-200 rounded-xl overflow-hidden">
+                    <button 
+                        @click="toggleFaq(3)"
+                        class="w-full px-6 py-5 text-left flex justify-between items-center bg-white hover:bg-gray-50 transition duration-200"
+                        :class="{ 'bg-gray-50': openFaq === 3 }">
+                        <span class="font-medium text-gray-800 text-lg">Можно ли провести газ зимой?</span>
+                        <i class="fas text-blue-600 transition-transform duration-300"
+                           :class="openFaq === 3 ? 'fa-chevron-up' : 'fa-chevron-down'"></i>
+                    </button>
+                    <div x-show="openFaq === 3" 
+                         x-collapse
+                         class="px-6 pb-5 pt-2 border-t border-gray-100">
+                        <p class="text-gray-700">
+                            Да, газификацию можно проводить круглый год, включая зимний период. Однако следует учитывать, что некоторые земляные работы могут быть сложнее из-за промерзшего грунта. Мы используем специализированное оборудование и технологии для проведения работ в любое время года. Согласование документов и проектирование можно начинать в любое время.
+                        </p>
+                    </div>
+                </div>
+
+                <!-- Вопрос 4 -->
+                <div class="border border-gray-200 rounded-xl overflow-hidden">
+                    <button 
+                        @click="toggleFaq(4)"
+                        class="w-full px-6 py-5 text-left flex justify-between items-center bg-white hover:bg-gray-50 transition duration-200"
+                        :class="{ 'bg-gray-50': openFaq === 4 }">
+                        <span class="font-medium text-gray-800 text-lg">Какая гарантия на выполненные работы?</span>
+                        <i class="fas text-blue-600 transition-transform duration-300"
+                           :class="openFaq === 4 ? 'fa-chevron-up' : 'fa-chevron-down'"></i>
+                    </button>
+                    <div x-show="openFaq === 4" 
+                         x-collapse
+                         class="px-6 pb-5 pt-2 border-t border-gray-100">
+                        <p class="text-gray-700">
+                            Мы предоставляем гарантию 12 месяцев на все выполненные работы и установленное оборудование. В течение гарантийного периода бесплатно устраняем любые неисправности, возникшие по нашей вине. На отдельные виды работ (монтаж газопровода, установка котлов) предоставляем расширенную гарантию до 3 лет. Все гарантийные обязательства фиксируем в договоре.
+                        </p>
+                    </div>
+                </div>
+
+                <!-- Вопрос 5 -->
+                <div class="border border-gray-200 rounded-xl overflow-hidden">
+                    <button 
+                        @click="toggleFaq(5)"
+                        class="w-full px-6 py-5 text-left flex justify-between items-center bg-white hover:bg-gray-50 transition duration-200"
+                        :class="{ 'bg-gray-50': openFaq === 5 }">
+                        <span class="font-medium text-gray-800 text-lg">Что входит в стоимость "под ключ"?</span>
+                        <i class="fas text-blue-600 transition-transform duration-300"
+                           :class="openFaq === 5 ? 'fa-chevron-up' : 'fa-chevron-down'"></i>
+                    </button>
+                    <div x-show="openFaq === 5" 
+                         x-collapse
+                         class="px-6 pb-5 pt-2 border-t border-gray-100">
+                        <p class="text-gray-700 mb-3">Стоимость "под ключ" включает все этапы работ:</p>
+                        <ul class="text-gray-700 space-y-2">
+                            <li class="flex items-start">
+                                <i class="fas fa-check text-green-500 text-sm mt-1 mr-3"></i>
+                                <span>Консультация и выезд инженера на объект</span>
+                            </li>
+                            <li class="flex items-start">
+                                <i class="fas fa-check text-green-500 text-sm mt-1 mr-3"></i>
+                                <span>Получение технических условий в Газпроме</span>
+                            </li>
+                            <li class="flex items-start">
+                                <i class="fas fa-check text-green-500 text-sm mt-1 mr-3"></i>
+                                <span>Разработка и согласование проекта газификации</span>
+                            </li>
+                            <li class="flex items-start">
+                                <i class="fas fa-check text-green-500 text-sm mt-1 mr-3"></i>
+                                <span>Закупка всех необходимых материалов и оборудования</span>
+                            </li>
+                            <li class="flex items-start">
+                                <i class="fas fa-check text-green-500 text-sm mt-1 mr-3"></i>
+                                <span>Монтажные и земляные работы</span>
+                            </li>
+                            <li class="flex items-start">
+                                <i class="fas fa-check text-green-500 text-sm mt-1 mr-3"></i>
+                                <span>Пусконаладочные работы и испытания</span>
+                            </li>
+                            <li class="flex items-start">
+                                <i class="fas fa-check text-green-500 text-sm mt-1 mr-3"></i>
+                                <span>Сдача объекта Газпрому и получение акта ввода в эксплуатацию</span>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+
+                <!-- Вопрос 6 -->
+                <div class="border border-gray-200 rounded-xl overflow-hidden">
+                    <button 
+                        @click="toggleFaq(6)"
+                        class="w-full px-6 py-5 text-left flex justify-between items-center bg-white hover:bg-gray-50 transition duration-200"
+                        :class="{ 'bg-gray-50': openFaq === 6 }">
+                        <span class="font-medium text-gray-800 text-lg">Можно ли установить газгольдер вместо магистрального газа?</span>
+                        <i class="fas text-blue-600 transition-transform duration-300"
+                           :class="openFaq === 6 ? 'fa-chevron-up' : 'fa-chevron-down'"></i>
+                    </button>
+                    <div x-show="openFaq === 6" 
+                         x-collapse
+                         class="px-6 pb-5 pt-2 border-t border-gray-100">
+                        <p class="text-gray-700">
+                            Да, если подключение к магистральному газу невозможно или экономически нецелесообразно, мы предлагаем установку газгольдера (автономной газификации). Это отличная альтернатива, которая обеспечивает полную независимость от магистральных сетей. Мы выполняем весь комплекс работ: от выбора места установки до монтажа и заправки газгольдера. Стоимость обычно выше, но вы получаете автономную систему отопления.
+                        </p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Кнопка для дополнительных вопросов -->
+            <div class="text-center mt-12">
+                <p class="text-gray-600 mb-6">Не нашли ответ на свой вопрос?</p>
+                <button @click="isModalOpen = true" 
+                        class="consult-btn text-white font-semibold py-3 px-8 rounded-lg text-base">
+                    <i class="fas fa-question-circle mr-2"></i>Задать вопрос
+                </button>
+            </div>
+        </div>
+    </section>
+
+<!-- Секция CTA - Широкая версия -->
+<section id="cta" class="py-12 lg:py-20 bg-white">
+    <div class="container mx-auto px-4">
+        <div class="bg-gradient-to-b from-white to-blue-50/50 border-gradient-to-b from-white to-blue-50/50 rounded-xl shadow-sm p-6 transition-all duration-300 hover:border-blue-300">
+            <div class="flex flex-col lg:flex-row items-stretch gap-8 lg:gap-12">
+                <!-- Левая часть: Заголовок и преимущества -->
+                <div class="lg:w-1/2 flex flex-col">
+                    <h2 class="text-2xl lg:text-3xl font-heading text-gray-900 mb-6 text-center lg:text-left">
+                        Начните газификацию вашего дома уже сегодня
+                    </h2>
+                    <p class="text-lg text-gray-700 mb-8 text-center lg:text-left">
+                        Получите бесплатную консультацию, выезд инженера и расчет стоимости за 24 часа
+                    </p>
+                    
+                    <!-- Преимущества в виде списка -->
+                    <div class="space-y-4 mb-8">
+                        <div class="flex items-start">
+                            <div class="w-6 h-6 bg-green-100 rounded-full flex items-center justify-center mt-1 mr-4 flex-shrink-0">
+                                <i class="fas fa-check text-green-600 text-xs"></i>
+                            </div>
+                            <p class="text-gray-700">Бесплатный выезд инженера на участок в удобное время</p>
+                        </div>
+                        <div class="flex items-start">
+                            <div class="w-6 h-6 bg-green-100 rounded-full flex items-center justify-center mt-1 mr-4 flex-shrink-0">
+                                <i class="fas fa-check text-green-600 text-xs"></i>
+                            </div>
+                            <p class="text-gray-700">Точный расчет стоимости "под ключ" без скрытых платежей</p>
+                        </div>
+                        <div class="flex items-start">
+                            <div class="w-6 h-6 bg-green-100 rounded-full flex items-center justify-center mt-1 mr-4 flex-shrink-0">
+                                <i class="fas fa-check text-green-600 text-xs"></i>
+                            </div>
+                            <p class="text-gray-700">Полное сопровождение от проекта до сдачи Газпрому</p>
+                        </div>
+                        <div class="flex items-start">
+                            <div class="w-6 h-6 bg-green-100 rounded-full flex items-center justify-center mt-1 mr-4 flex-shrink-0">
+                                <i class="fas fa-check text-green-600 text-xs"></i>
+                            </div>
+                            <p class="text-gray-700">Гарантия 12 месяцев на все работы и материалы</p>
+                        </div>
+                        
+                        <!-- Доверительные элементы под гарантией -->
+                        <div class="flex flex-wrap justify-start items-center gap-6 mt-6 pt-6 border-t border-gray-200">
+                            <div class="text-center">
+                                <div class="text-2xl font-bold text-blue-600 mb-1">12+</div>
+                                <div class="text-sm text-gray-600">лет опыта</div>
+                            </div>
+                            <div class="h-8 w-px bg-gray-300"></div>
+                            <div class="text-center">
+                                <div class="text-2xl font-bold text-blue-600 mb-1">450+</div>
+                                <div class="text-sm text-gray-600">проектов</div>
+                            </div>
+                            <div class="h-8 w-px bg-gray-300"></div>
+                            <div class="text-center">
+                                <div class="text-2xl font-bold text-blue-600 mb-1">100%</div>
+                                <div class="text-sm text-gray-600">гарантия сдачи</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Правая часть: Форма для заявки -->
+                <div class="lg:w-1/2 w-full flex items-stretch">
+                    <!-- Белый блок с формой -->
+                    <div class="bg-white rounded-xl p-6 lg:p-8 border border-blue-200 shadow-lg w-full flex flex-col justify-center">
+                        <!-- Заголовок формы с иконкой сверху -->
+                        <div class="text-center mb-6">
+                            <div class="mb-3">
+                                <i class="fas fa-phone-alt text-blue-600 text-2xl"></i>
+                            </div>
+                            <h3 class="text-xl font-heading text-gray-800 mb-2">Оставить заявку</h3>
+                            <p class="text-gray-600 text-sm">Заполните форму и мы перезвоним в течение 15 минут</p>
+                        </div>
+
+                        <!-- Форма -->
+                        <div class="space-y-4">
+                            <!-- Имя -->
+                            <div>
+                                <label class="block text-sm font-medium text-gray-700 mb-1">
+                                    Ваше имя <span class="text-red-500">*</span>
+                                </label>
+                                <input type="text" 
+                                       class="w-full px-4 py-3 flat-input text-sm"
+                                       placeholder="Иван Иванов">
+                            </div>
+                            
+                            <!-- Телефон -->
+                            <div>
+                                <label class="block text-sm font-medium text-gray-700 mb-1">
+                                    Номер телефона <span class="text-red-500">*</span>
+                                </label>
+                                <input type="tel" 
+                                       class="w-full px-4 py-3 flat-input text-sm"
+                                       placeholder="+7 (___) ___-__-__">
+                            </div>
+                            
+                            <!-- Согласие -->
+                            <div class="flex items-start space-x-3">
+                                <div class="mt-1 h-4 w-4 bg-blue-600 border-gray-300 rounded flex items-center justify-center flex-shrink-0">
+                                    <i class="fas fa-check text-white text-xs"></i>
+                                </div>
+                                <p class="text-xs text-gray-600">
+                                    Нажимая кнопку, я соглашаюсь на обработку 
+                                    <a href="#" class="text-blue-600 hover:text-blue-800">персональных данных</a>
+                                </p>
+                            </div>
+                            
+                            <!-- Кнопка отправки -->
+                            <button type="button" 
+                                    @click="isModalOpen = true"
+                                    class="w-full consult-btn text-white font-semibold py-3 px-6 rounded-lg text-sm transition duration-200 mt-2">
+                                <i class="fas fa-paper-plane mr-2"></i>Оставить заявку
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+    <!-- Футер -->
+    <footer id="footer" class="bg-gray-800 text-white mt-20">
+        <div class="container mx-auto px-4">
+            <div class="py-10 border-b border-gray-700">
+                <div class="flex flex-col md:flex-row justify-center items-start gap-8 md:gap-12 lg:gap-20">
+                    <!-- Адрес (первый слева) -->
+                    <div class="flex items-start space-x-4">
+                        <div class="w-10 h-10 bg-gray-700 rounded-full flex items-center justify-center mt-1 flex-shrink-0">
+                            <i class="fas fa-map-marker-alt text-blue-300"></i>
+                        </div>
+                        <div class="text-left">
+                            <p class="font-bold mb-1">г. Вологда</p>
+                            <p class="text-sm text-gray-300">ул. Промышленная 10, оф. Распиздяев</p>
+                        </div>
+                    </div>
+                    
+                    <!-- Телефон (кликабельный) (в центре) -->
+                    <div class="flex items-start space-x-4">
+                        <div class="w-10 h-10 bg-gray-700 rounded-full flex items-center justify-center mt-1 flex-shrink-0">
+                            <i class="fas fa-phone text-blue-300"></i>
+                        </div>
+                        <div class="text-left">
+                            <a href="tel:+79114430101" class="contact-link">
+                                <p class="font-bold text-base mb-1 hover:text-blue-200">8 (911) 443-01-01</p>
+                            </a>
+                            <p class="text-sm text-gray-300">Бесплатный звонок по РФ</p>
+                        </div>
+                    </div>
+                    
+                    <!-- Почта (кликабельная) (в конце) -->
+                    <div class="flex items-start space-x-4">
+                        <div class="w-10 h-10 bg-gray-700 rounded-full flex items-center justify-center mt-1 flex-shrink-0">
+                            <i class="fas fa-envelope text-blue-300"></i>
+                        </div>
+                        <div class="text-left">
+                            <a href="mailto:info@skstaurus.ru" class="contact-link">
+                                <p class="font-bold mb-1 hover:text-blue-200">info@skstaurus.ru</p>
+                            </a>
+                            <p class="text-sm text-gray-300">Для общих вопросов</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="py-6 border-b border-gray-700">
+                <div class="flex justify-center">
+                    <nav class="flex flex-wrap justify-center gap-6 md:gap-8 text-sm">
+                        <a href="#" class="text-gray-300 hover:text-white transition duration-200">Главная</a>
+                        <a href="#services" class="text-gray-300 hover:text-white transition duration-200">Услуги</a>
+                        <a href="#process" class="text-gray-300 hover:text-white transition duration-200">Процесс работы</a>
+                        <a href="#projects" class="text-gray-300 hover:text-white transition duration-200">Наши проекты</a>
+                        <a href="#pricing" class="text-gray-300 hover:text-white transition duration-200">Стоимость</a>
+                        <a href="#footer" class="text-gray-300 hover:text-white transition duration-200">Контакты</a>
+                    </nav>
+                </div>
+            </div>
+            
+            <div class="py-6">
+                <div class="flex flex-col md:flex-row justify-between items-center space-y-4 md:space-y-0">
+                    <div class="flex items-center space-x-3">
+                        <!-- Логотип в футере из файла -->
+                        <div class="flex items-center justify-center flex-shrink-0">
+                            <img src="logo.svg" alt="СКС ТАУРУС" class="footer-logo-img">
+                        </div>
+                        <div class="text-left">
+                            <span class="text-gray-400 text-xs">
+                                © 2025 ООО "СКС ТАУРУС". Все права защищены.
+                            </span>
+                        </div>
+                    </div>
+                    
+                    <div class="text-center text-xs text-gray-400">
+                        <p>Сайт создан с <i class="fas fa-heart text-red-400 mx-1"></i> N.K.</p>
+                    </div>
+                    
+                    <div class="flex space-x-4 text-xs text-gray-400">
+                        <a href="#" class="hover:text-gray-300 transition duration-200">
+                            Политика конфиденциальности
+                        </a>
+                        <a href="#" class="hover:text-gray-300 transition duration-200">
+                            Согласие на обработку данных
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+<!-- Самый простой спиннер -->
+<div id="loading-spinner" class="fixed inset-0 bg-white z-50 flex items-center justify-center">
+    <div class="flex flex-col items-center">
+        <!-- Спиннер из Tailwind -->
+        <div class="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-600 mb-4"></div>
+    </div>
+</div>
+
+    <script>
+        // Закрытие меню при ресайзе
+        window.addEventListener('resize', function() {
+            if (window.innerWidth >= 1024) {
+                if (document.querySelector('[x-data]') && document.querySelector('[x-data]').__x) {
+                    document.querySelector('[x-data]').__x.$data.isMobileMenuOpen = false;
+                }
+                document.body.classList.remove('menu-open');
+            }
+        });
+
+        // Простое скрытие при загрузке
+    window.addEventListener('load', function() {
+    const spinner = document.getElementById('loading-spinner');
+    spinner.classList.add('opacity-0');
+    setTimeout(() => spinner.remove(), 300);
+});
+    </script>
+</body>
+</html>
