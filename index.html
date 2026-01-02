@@ -34,7 +34,6 @@
             overflow: hidden;
         }
         
-        /* Оверлей для мобильного меню */
         .mobile-menu-overlay {
             position: fixed;
             top: 0;
@@ -45,7 +44,6 @@
             z-index: 40;
         }
         
-        /* Остальные стили без изменений */
         .consult-btn {
             background: linear-gradient(135deg, #2563eb 0%, #1d4ed8 100%);
             transition: all 0.3s ease;
@@ -159,17 +157,14 @@
             padding-top: 1rem;
         }
 
-        /* Исправление для якорных ссылок с учетом фиксированного хедера */
         html {
             scroll-behavior: smooth;
         }
         
-        /* Явно для каждой секции - мобильные */
         #services, #process, #projects, #pricing, #mistakes, #faq, #cta {
             scroll-margin-top: 5rem;
         }
         
-        /* На десктопах - меньше отступ */
         @media (min-width: 1024px) {
             #services, #process, #projects, #pricing, #mistakes, #faq, #cta {
                 scroll-margin-top: 4rem;
@@ -179,28 +174,23 @@
     </style>
 </head>
 <body class="bg-white" :class="{ 'menu-open': isMobileMenuOpen, 'modal-open': isModalOpen }">
-    <!-- Оверлей для мобильного меню -->
     <div x-show="isMobileMenuOpen" 
          x-transition.opacity.duration.300ms
          @click="isMobileMenuOpen = false"
          class="mobile-menu-overlay lg:hidden">
     </div>
 
-    <!-- Модальное окно для заявки с затемненным фоном -->
     <div x-cloak x-show="isModalOpen" 
          x-transition.opacity.duration.300ms
          class="fixed inset-0 z-50">
-        <!-- Фон с 50% затемнением -->
         <div class="absolute inset-0 bg-black bg-opacity-50"
              @click="isModalOpen = false">
         </div>
         
-        <!-- Контент модального окна -->
         <div class="absolute inset-0 flex items-center justify-center p-4">
             <div class="bg-white rounded-xl shadow-2xl max-w-md w-full relative z-10"
                  @click.stop>
-                <!-- Заголовок модального окна -->
-                <div class="p-6 border-b border-gray-100">
+               <div class="p-6 border-b border-gray-100">
                     <div class="flex justify-between items-center">
                         <div>
                             <h3 class="text-xl font-heading text-gray-800">Оставить заявку</h3>
@@ -212,10 +202,8 @@
                     </div>
                 </div>
                 
-                <!-- Форма -->
-                <div class="p-6">
+               <div class="p-6">
                     <div class="space-y-5">
-                        <!-- Имя -->
                         <div>
                             <label class="block text-sm font-medium text-gray-700 mb-2">
                                 Ваше имя <span class="text-red-500">*</span>
@@ -225,7 +213,6 @@
                                    placeholder="Иван Иванов">
                         </div>
                         
-                        <!-- Телефон -->
                         <div>
                             <label class="block text-sm font-medium text-gray-700 mb-2">
                                 Номер телефона <span class="text-red-500">*</span>
@@ -235,7 +222,6 @@
                                    placeholder="+7 (___) ___-__-__">
                         </div>
                         
-                        <!-- Сообщение -->
                         <div>
                             <label class="block text-sm font-medium text-gray-700 mb-2">
                                 Комментарий (необязательно)
@@ -245,7 +231,6 @@
                                       placeholder="Например: нужна газификация дома 150м² в Соколе"></textarea>
                         </div>
                         
-                        <!-- Согласие -->
                         <div class="flex items-start space-x-3">
                             <div class="mt-1 h-4 w-4 bg-blue-600 border-gray-300 rounded flex items-center justify-center">
                                 <i class="fas fa-check text-white text-xs"></i>
@@ -256,7 +241,6 @@
                             </p>
                         </div>
                         
-                        <!-- Кнопка отправки -->
                         <button type="button" 
                                 @click="isModalOpen = false"
                                 class="w-full consult-btn text-white font-semibold py-4 px-6 rounded-lg transition duration-200">
@@ -268,7 +252,6 @@
         </div>
     </div>
 
-    <!-- Плоский Navbar с тенью при скролле -->
     <nav class="bg-white sticky top-0 z-40 transition-shadow duration-300"
          :class="isScrolled ? 'shadow-md' : ''">
         <div class="container mx-auto px-4">
@@ -280,14 +263,12 @@
                         <div class="flex items-center justify-center">
                             <img src="logo.svg" alt="СКС ТАУРУС" class="logo-img">
                         </div>
-                        <!-- Название компании рядом с логотипом (всегда видно) -->
                         <p class="text-lg md:text-xl font-bold text-gray-900 leading-tight ml-3">
                             СКС ТАУРУС
                         </p>
                     </div>
                 </div>
 
-                <!-- Десктопное меню -->
                 <div class="hidden lg:flex items-center space-x-1">
                     <a href="#" class="px-4 py-2 text-gray-700 hover:text-blue-600 font-medium transition duration-200">Главная</a>
                     <a href="#services" class="px-4 py-2 text-gray-700 hover:text-blue-600 font-medium transition duration-200">Услуги</a>
@@ -296,7 +277,6 @@
                     <a href="#pricing" class="px-4 py-2 text-gray-700 hover:text-blue-600 font-medium transition duration-200">Стоимость</a>
                     <a href="#footer" class="px-4 py-2 text-gray-700 hover:text-blue-600 font-medium transition duration-200">Контакты</a>
                     
-                    <!-- Телефон (кликабельный) -->
                     <div class="ml-4 pl-4 border-l border-gray-200">
                         <div class="flex items-center space-x-2">
                             <i class="fas fa-phone text-blue-500 text-sm"></i>
@@ -311,12 +291,9 @@
                     </div>
                 </div>
 
-                <!-- Мобильный navbar с информацией и телефоном -->
                 <div class="lg:hidden flex items-center space-x-4">
-                    <!-- Информация в мобильном navbar -->
-                    <div class="hidden sm:flex items-center space-x-4">
-                        <!-- Телефон (кликабельный) -->
-                        <div class="flex items-center space-x-2">
+                   <div class="hidden sm:flex items-center space-x-4">
+                       <div class="flex items-center space-x-2">
                             <i class="fas fa-phone text-blue-500 text-sm"></i>
                             <div class="text-left">
                                 <a href="tel:+79114430101" class="contact-link">
@@ -328,8 +305,7 @@
                         </div>
                     </div>
                     
-                    <!-- На очень маленьких экранах - только телефон (кликабельный) -->
-                    <div class="sm:hidden flex items-center space-x-2">
+                   <div class="sm:hidden flex items-center space-x-2">
                         <i class="fas fa-phone text-blue-500 text-sm"></i>
                         <div class="text-left">
                             <a href="tel:+79114430101" class="contact-link">
@@ -340,7 +316,6 @@
                         </div>
                     </div>
                     
-                    <!-- Кнопка мобильного меню -->
                     <button @click="isMobileMenuOpen = !isMobileMenuOpen" class="text-gray-700 hover:text-blue-600 p-2">
                         <i x-show="!isMobileMenuOpen" class="fas fa-bars text-xl"></i>
                         <i x-show="isMobileMenuOpen" class="fas fa-times text-xl"></i>
@@ -350,7 +325,6 @@
         </div>
     </nav>
 
-    <!-- Упрощенное мобильное меню с тенью (только навигация) -->
     <div x-show="isMobileMenuOpen" 
          x-transition:enter="transition ease-out duration-300"
          x-transition:enter-start="opacity-0 -translate-x-4"
@@ -361,7 +335,6 @@
          class="lg:hidden fixed top-16 left-0 right-0 bg-white py-2 max-h-[calc(100vh-4rem)] overflow-y-auto z-40 shadow-lg"
          @click.away="isMobileMenuOpen = false">
         
-        <!-- Только навигация -->
         <div class="py-2">
             <a href="#" @click="isMobileMenuOpen = false" class="block px-6 py-3 text-gray-700 hover:text-blue-600 font-medium">Главная</a>
             <a href="#services" @click="isMobileMenuOpen = false" class="block px-6 py-3 text-gray-700 hover:text-blue-600 font-medium">Услуги</a>
@@ -372,31 +345,24 @@
         </div>
     </div>
 
-    <!-- Hero секция с адаптивным порядком -->
     <section id="hero" class="py-8 lg:py-20 bg-white">
         <div class="container mx-auto px-4">
-            <!-- На мобильных: изображение сверху, текст снизу -->
             <div class="flex flex-col lg:flex-row items-center gap-8 lg:gap-16">
-                <!-- Изображение справа на десктопе, сверху на мобильных -->
-                <div class="w-full lg:w-1/2 order-1 lg:order-2">
+               <div class="w-full lg:w-1/2 order-1 lg:order-2">
                     <div class="hero-image-container">
-                        <!-- Используем HTML img вместо CSS background -->
-                        <img src="OME7ZU0.jpg" 
+                       <img src="OME7ZU0.jpg" 
                              alt="Профессиональная газификация частных домов" 
                              class="hero-image"
                              onerror="this.onerror=null; this.src='https://images.unsplash.com/photo-1600596542815-ffad4c1539a9?ixlib=rb-4.0.3&auto=format&fit=crop&w=1200&q=80';">
                     </div>
                 </div>
                 
-                <!-- Текстовая часть слева на десктопе, снизу на мобильных -->
                 <div class="w-full lg:w-1/2 order-2 lg:order-1">
-                    <!-- Заголовок -->
                     <h1 class="text-2xl sm:text-3xl lg:text-4xl font-heading text-gray-900 mb-3 lg:mb-4 leading-tight">
                         Профессиональная газификация домов 
                         <span class="text-blue-600">под ключ</span>
                     </h1>
                     
-                    <!-- Блок с подчеркиванием экспертизы и USP -->
                     <div class="border-l-4 border-blue-500 pl-4 mb-4 lg:mb-6">
                         <p class="text-base lg:text-lg text-gray-800 italic">
                             Проектирование и монтаж газопроводов 
@@ -406,7 +372,6 @@
                         </p>
                     </div>
                     
-                    <!-- Преимущества -->
                     <div class="space-y-3 lg:space-y-4 mb-8 lg:mb-10">
                         <div class="flex items-center">
                             <div class="w-6 h-6 bg-green-100 rounded-full flex items-center justify-center mr-3 lg:mr-4 flex-shrink-0">
@@ -434,7 +399,6 @@
                         </div>
                     </div>
                     
-                    <!-- Кнопка -->
                     <div class="mt-6 lg:mt-0">
                         <button @click="isModalOpen = true" 
                                 class="consult-btn text-white font-semibold py-3 px-6 rounded-lg text-sm lg:text-base w-full sm:w-auto">
@@ -446,24 +410,19 @@
         </div>
     </section>
 
-    <!-- Секция "Услуги" -->
     <section id="services" class="py-12 lg:py-20 bg-white">
         <div class="container mx-auto px-4">
-            <!-- Заголовок секции -->
-            <div class="text-center mb-12 lg:mb-16">
+           <div class="text-center mb-12 lg:mb-16">
                 <h2 class="text-2xl lg:text-3xl font-heading text-gray-900 mb-4">
                     Наши услуги
                 </h2>
-                <!-- Разделитель -->
-                <div class="w-32 h-0.5 bg-gray-200 mx-auto mb-6"></div>
+               <div class="w-32 h-0.5 bg-gray-200 mx-auto mb-6"></div>
                 <p class="text-lg text-gray-600 max-w-2xl mx-auto">
                     Полный комплекс услуг по инженерным системам для частных домов
                 </p>
             </div>
             
-            <!-- Карточки услуг -->
             <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
-                <!-- Услуга 1: Проектирование и монтаж газопроводов -->
                 <div class="bg-gradient-to-b from-white to-blue-50/50 border-gradient-to-b from-white to-blue-50/50 rounded-xl p-6 transition-all duration-300">
                     <div class="w-12 h-12 rounded-lg flex items-center justify-center mb-5 mx-auto">
                         <i class="fas fa-fire text-blue-600 text-2xl"></i>
@@ -495,8 +454,7 @@
                     </ul>
                 </div>
                 
-                <!-- Услуга 2: Монтаж систем отопления и водоснабжения -->
-                <div class="bg-gradient-to-b from-white to-blue-50/50 border-gradient-to-b from-white to-blue-50/50 rounded-xl p-6 transition-all duration-300">
+               <div class="bg-gradient-to-b from-white to-blue-50/50 border-gradient-to-b from-white to-blue-50/50 rounded-xl p-6 transition-all duration-300">
                     <div class="w-12 h-12 rounded-lg flex items-center justify-center mb-5 mx-auto">
                         <i class="fas fa-temperature-high text-blue-600 text-2xl"></i>
                     </div>
@@ -527,8 +485,7 @@
                     </ul>
                 </div>
                 
-                <!-- Услуга 3: Обследование и монтаж вентиляции -->
-                <div class="bg-gradient-to-b from-white to-blue-50/50 border-gradient-to-b from-white to-blue-50/50 rounded-xl p-6 transition-all duration-300">
+               <div class="bg-gradient-to-b from-white to-blue-50/50 border-gradient-to-b from-white to-blue-50/50 rounded-xl p-6 transition-all duration-300">
                     <div class="w-12 h-12 rounded-lg flex items-center justify-center mb-5 mx-auto">
                         <i class="fas fa-wind text-blue-600 text-2xl"></i>
                     </div>
@@ -562,50 +519,40 @@
         </div>
     </section>
 
-    <!-- Секция "Процесс работы" -->
     <section id="process" class="py-12 lg:py-20 bg-white">
         <div class="container mx-auto px-4">
-            <!-- Заголовок секции -->
             <div class="text-center mb-12 lg:mb-16">
                 <h2 class="text-2xl lg:text-3xl font-heading text-gray-900 mb-4">
                     Процесс работы
                 </h2>
-                <!-- Разделитель -->
                 <div class="w-32 h-0.5 bg-gray-200 mx-auto mb-6"></div>
                 <p class="text-lg text-gray-600 max-w-2xl mx-auto">
                     6 этапов газификации вашего дома под ключ
                 </p>
             </div>
             
-            <!-- Горизонтальные карточки с иконками -->
             <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-                <!-- Этап 1 -->
                 <div class="stage-card bg-gradient-to-b from-white to-blue-50/50 border-gradient-to-b from-white to-blue-50/50 rounded-xl p-6 transition-all duration-300">
                     <div class="stage-card-content">
-                        <!-- Номер этапа и время в левом верхнем углу -->
-                        <div class="flex items-center gap-2 mb-4">
+                       <div class="flex items-center gap-2 mb-4">
                             <span class="text-blue-600 font-bold">Этап 1</span>
                             <span class="text-gray-400">•</span>
                             <span class="text-gray-600 font-medium">1 день</span>
                         </div>
                         
-                        <!-- Иконка по центру -->
                         <div class="w-12 h-12 rounded-lg flex items-center justify-center mb-5 mx-auto">
                             <i class="fas fa-file-alt text-blue-600 text-2xl"></i>
                         </div>
                         
-                        <!-- Название этапа -->
-                        <h3 class="font-heading text-gray-800 text-xl mb-4 text-center">
+                       <h3 class="font-heading text-gray-800 text-xl mb-4 text-center">
                             Сбор документов
                         </h3>
                         
-                        <!-- Описание -->
-                        <p class="text-gray-700 text-center">
+                       <p class="text-gray-700 text-center">
                             Подготавливаем доверенность, проверяем комплектность документов, собираем заявку на технические условия
                         </p>
                     </div>
                     
-                    <!-- Кнопка -->
                     <div class="stage-card-button-container">
                         <div class="text-center">
                             <button @click="isModalOpen = true" 
@@ -617,33 +564,27 @@
                     </div>
                 </div>
                 
-                <!-- Этап 2 -->
-                <div class="stage-card bg-gradient-to-b from-white to-blue-50/50 border-gradient-to-b from-white to-blue-50/50 rounded-xl p-6 transition-all duration-300">
+               <div class="stage-card bg-gradient-to-b from-white to-blue-50/50 border-gradient-to-b from-white to-blue-50/50 rounded-xl p-6 transition-all duration-300">
                     <div class="stage-card-content">
-                        <!-- Номер этапа и время в левом верхнем углу -->
                         <div class="flex items-center gap-2 mb-4">
                             <span class="text-blue-600 font-bold">Этап 2</span>
                             <span class="text-gray-400">•</span>
                             <span class="text-gray-600 font-medium">25 дней</span>
                         </div>
                         
-                        <!-- Иконка по центру -->
-                        <div class="w-12 h-12 rounded-lg flex items-center justify-center mb-5 mx-auto">
+                       <div class="w-12 h-12 rounded-lg flex items-center justify-center mb-5 mx-auto">
                             <i class="fas fa-handshake text-blue-600 text-2xl"></i>
                         </div>
                         
-                        <!-- Название этапа -->
                         <h3 class="font-heading text-gray-800 text-xl mb-4 text-center">
                             Договор подключения
                         </h3>
                         
-                        <!-- Описание -->
                         <p class="text-gray-700 text-center">
                             Подаем документы в Газпром, контролируем сроки, получаем и передаем документы без очередей
                         </p>
                     </div>
                     
-                    <!-- Кнопка -->
                     <div class="stage-card-button-container">
                         <div class="text-center">
                             <button @click="isModalOpen = true" 
@@ -655,33 +596,27 @@
                     </div>
                 </div>
                 
-                <!-- Этап 3 -->
                 <div class="stage-card bg-gradient-to-b from-white to-blue-50/50 border-gradient-to-b from-white to-blue-50/50 rounded-xl p-6 transition-all duration-300">
                     <div class="stage-card-content">
-                        <!-- Номер этапа и время в левом верхнем углу -->
                         <div class="flex items-center gap-2 mb-4">
                             <span class="text-blue-600 font-bold">Этап 3</span>
                             <span class="text-gray-400">•</span>
                             <span class="text-gray-600 font-medium">25 дней</span>
                         </div>
                         
-                        <!-- Иконка по центру -->
-                        <div class="w-12 h-12 rounded-lg flex items-center justify-center mb-5 mx-auto">
+                       <div class="w-12 h-12 rounded-lg flex items-center justify-center mb-5 mx-auto">
                             <i class="fas fa-drafting-compass text-blue-600 text-2xl"></i>
                         </div>
                         
-                        <!-- Название этапа -->
                         <h3 class="font-heading text-gray-800 text-xl mb-4 text-center">
                             Разработка проекта
                         </h3>
                         
-                        <!-- Описание -->
                         <p class="text-gray-700 text-center">
                             Выезжаем на объект, разрабатываем проект под Ваши пожелания, согласовываем в Газпроме
                         </p>
                     </div>
                     
-                    <!-- Кнопка -->
                     <div class="stage-card-button-container">
                         <div class="text-center">
                             <button @click="isModalOpen = true" 
@@ -693,33 +628,27 @@
                     </div>
                 </div>
                 
-                <!-- Этап 4 -->
                 <div class="stage-card bg-gradient-to-b from-white to-blue-50/50 border-gradient-to-b from-white to-blue-50/50 rounded-xl p-6 transition-all duration-300">
                     <div class="stage-card-content">
-                        <!-- Номер этапа и время в левом верхнем углу -->
-                        <div class="flex items-center gap-2 mb-4">
+                       <div class="flex items-center gap-2 mb-4">
                             <span class="text-blue-600 font-bold">Этап 4</span>
                             <span class="text-gray-400">•</span>
                             <span class="text-gray-600 font-medium">2 дня</span>
                         </div>
                         
-                        <!-- Иконка по центру -->
                         <div class="w-12 h-12 rounded-lg flex items-center justify-center mb-5 mx-auto">
                             <i class="fas fa-tools text-blue-600 text-2xl"></i>
                         </div>
                         
-                        <!-- Название этапа -->
                         <h3 class="font-heading text-gray-800 text-xl mb-4 text-center">
                             Монтаж "под ключ"
                         </h3>
                         
-                        <!-- Описание -->
                         <p class="text-gray-700 text-center">
                             Закупаем материалы, выполняем монтаж по проекту, проводим испытания газопровода
                         </p>
                     </div>
                     
-                    <!-- Кнопка -->
                     <div class="stage-card-button-container">
                         <div class="text-center">
                             <button @click="isModalOpen = true" 
@@ -731,33 +660,27 @@
                     </div>
                 </div>
                 
-                <!-- Этап 5 -->
                 <div class="stage-card bg-gradient-to-b from-white to-blue-50/50 border-gradient-to-b from-white to-blue-50/50 rounded-xl p-6 transition-all duration-300">
                     <div class="stage-card-content">
-                        <!-- Номер этапа и время в левом верхнем углу -->
-                        <div class="flex items-center gap-2 mb-4">
+                       <div class="flex items-center gap-2 mb-4">
                             <span class="text-blue-600 font-bold">Этап 5</span>
                             <span class="text-gray-400">•</span>
                             <span class="text-gray-600 font-medium">2 дня</span>
                         </div>
                         
-                        <!-- Иконка по центру -->
-                        <div class="w-12 h-12 rounded-lg flex items-center justify-center mb-5 mx-auto">
+                       <div class="w-12 h-12 rounded-lg flex items-center justify-center mb-5 mx-auto">
                             <i class="fas fa-clipboard-check text-blue-600 text-2xl"></i>
                         </div>
                         
-                        <!-- Название этапа -->
                         <h3 class="font-heading text-gray-800 text-xl mb-4 text-center">
                             Сдача Газпрому
                         </h3>
                         
-                        <!-- Описание -->
                         <p class="text-gray-700 text-center">
                             Даем рекомендации, присутствуем при приемке, помогаем решать спорные вопросы
                         </p>
                     </div>
                     
-                    <!-- Кнопка -->
                     <div class="stage-card-button-container">
                         <div class="text-center">
                             <button @click="isModalOpen = true" 
@@ -769,33 +692,27 @@
                     </div>
                 </div>
                 
-                <!-- Этап 6 -->
                 <div class="stage-card bg-gradient-to-b from-white to-blue-50/50 border-gradient-to-b from-white to-blue-50/50 rounded-xl p-6 transition-all duration-300">
                     <div class="stage-card-content">
-                        <!-- Номер этапа и время в левом верхнем углу -->
                         <div class="flex items-center gap-2 mb-4">
                             <span class="text-blue-600 font-bold">Этап 6</span>
                             <span class="text-gray-400">•</span>
                             <span class="text-gray-600 font-medium">35 дней</span>
                         </div>
                         
-                        <!-- Иконка по центру -->
                         <div class="w-12 h-12 rounded-lg flex items-center justify-center mb-5 mx-auto">
                             <i class="fas fa-folder-open text-blue-600 text-2xl"></i>
                         </div>
                         
-                        <!-- Название этапа -->
-                        <h3 class="font-heading text-gray-800 text-xl mb-4 text-center">
+                       <h3 class="font-heading text-gray-800 text-xl mb-4 text-center">
                             Оформление документов
                         </h3>
                         
-                        <!-- Описание -->
                         <p class="text-gray-700 text-center">
                             Собираем исполнительную документацию, готовим дополнительные документы, исправляем замечания
                         </p>
                     </div>
                     
-                    <!-- Кнопка -->
                     <div class="stage-card-button-container">
                         <div class="text-center">
                             <button @click="isModalOpen = true" 
@@ -810,10 +727,8 @@
         </div>
     </section>
 
-<!-- Секция "Наши проекты" -->
 <section id="projects" class="py-12 lg:py-20 bg-white">
     <div class="container mx-auto px-4">
-        <!-- Заголовок секции -->
         <div class="text-center mb-12 lg:mb-16">
             <h2 class="text-2xl lg:text-3xl font-heading text-gray-900 mb-4">
                 Наши проекты
@@ -825,9 +740,7 @@
             </p>
         </div>
 
-        <!-- Сетка проектов -->
         <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 lg:gap-8">
-            <!-- Проект 1 -->
             <div class="bg-gradient-to-b from-white to-blue-50/50 from-white to-blue-50/50 rounded-xl overflow-hidden transition-all duration-300">
                 <div class="relative overflow-hidden h-48">
                     <img src="https://gi-gas.ru/upload/iblock/c62/0vnvkk7xil8gwvxq618ki96m213nxr25/WhatsApp%20Image%202025-10-17%20at%2014.54.22%20(8)+.jpg" 
@@ -860,7 +773,6 @@
                 </div>
             </div>
 
-            <!-- Проект 2 -->
             <div class="bg-gradient-to-b from-white to-blue-50/50 from-white to-blue-50/50 rounded-xl overflow-hidden transition-all duration-300">
                 <div class="relative overflow-hidden h-48">
                     <img src="https://gi-gas.ru/upload/iblock/6af/rhlbxfb7c8b8u2ubec0c81htkkv1mp5y/20250909_131658+.jpg" 
@@ -893,8 +805,7 @@
                 </div>
             </div>
 
-            <!-- Проект 3 -->
-            <div class="bg-gradient-to-b from-white to-blue-50/50 from-white to-blue-50/50 rounded-xl overflow-hidden transition-all duration-300">
+           <div class="bg-gradient-to-b from-white to-blue-50/50 from-white to-blue-50/50 rounded-xl overflow-hidden transition-all duration-300">
                 <div class="relative overflow-hidden h-48">
                     <img src="https://gi-gas.ru/upload/iblock/4fc/wd83o15qp8jgtw61ylkvm5qjhlavgl2d/nkcvksu4smoswccosos.jpg" 
                          alt="Усадьба в Грязовце"
@@ -929,15 +840,12 @@
     </div>
 </section>
 
-<!-- Секция "Стоимость" -->
 <section id="pricing" class="py-12 lg:py-20 bg-white">
     <div class="container mx-auto px-4">
-        <!-- Заголовок секции -->
-        <div class="text-center mb-12 lg:mb-16">
+       <div class="text-center mb-12 lg:mb-16">
             <h2 class="text-2xl lg:text-3xl font-heading text-gray-900 mb-4">
                 Стоимость газификации
             </h2>
-            <!-- Разделитель -->
             <div class="w-32 h-0.5 bg-gray-200 mx-auto mb-6"></div>
             <p class="text-lg text-gray-600 max-w-2xl mx-auto">
                 Индивидуальный расчет для каждого проекта. Цена зависит от множества факторов
@@ -945,7 +853,6 @@
         </div>
 
         <div class="flex flex-col lg:flex-row items-stretch gap-8 lg:gap-12">
-            <!-- Левая часть: Факторы стоимости -->
             <div class="lg:w-1/2">
                 <div class="bg-gradient-to-b from-white to-blue-50/50 rounded-xl p-6 lg:p-8 bd-gradient-to-b from-white to-blue-50/50 h-full">
                     <h3 class="font-heading text-gray-800 text-xl lg:text-2xl mb-6 text-center lg:text-left">
@@ -953,7 +860,6 @@
                     </h3>
                     
                     <div class="space-y-6">
-                        <!-- Фактор 1 -->
                         <div class="flex items-start">
                             <div class="w-10 h-10 bg-blue-100 rounded-lg flex items-center justify-center mr-4 flex-shrink-0">
                                 <i class="fas fa-ruler text-blue-600"></i>
@@ -966,7 +872,6 @@
                             </div>
                         </div>
 
-                        <!-- Фактор 2 -->
                         <div class="flex items-start">
                             <div class="w-10 h-10 bg-blue-100 rounded-lg flex items-center justify-center mr-4 flex-shrink-0">
                                 <i class="fas fa-mountain text-blue-600"></i>
@@ -979,7 +884,6 @@
                             </div>
                         </div>
 
-                        <!-- Фактор 3 -->
                         <div class="flex items-start">
                             <div class="w-10 h-10 bg-blue-100 rounded-lg flex items-center justify-center mr-4 flex-shrink-0">
                                 <i class="fas fa-home text-blue-600"></i>
@@ -992,7 +896,6 @@
                             </div>
                         </div>
 
-                        <!-- Фактор 4 -->
                         <div class="flex items-start">
                             <div class="w-10 h-10 bg-blue-100 rounded-lg flex items-center justify-center mr-4 flex-shrink-0">
                                 <i class="fas fa-fire text-blue-600"></i>
@@ -1005,7 +908,6 @@
                             </div>
                         </div>
 
-                        <!-- Фактор 5 -->
                         <div class="flex items-start">
                             <div class="w-10 h-10 bg-blue-100 rounded-lg flex items-center justify-center mr-4 flex-shrink-0">
                                 <i class="fas fa-file-alt text-blue-600"></i>
@@ -1021,11 +923,9 @@
                 </div>
             </div>
 
-            <!-- Правая часть: Индивидуальный расчет -->
             <div class="lg:w-1/2">
                 <div class="bg-gradient-to-b from-white to-blue-50/50 rounded-xl p-6 lg:p-8 bd-gradient-to-b from-white to-blue-50/50 h-full">
                     <div class="flex flex-col h-full">
-                        <!-- Верхняя часть с иконкой -->
                         <div class="text-center mb-8">
                             <div class="w-16 h-16 bg-blue-100 rounded-full flex items-center justify-center mx-auto mb-4">
                                 <i class="fas fa-calculator text-blue-600 text-2xl"></i>
@@ -1038,7 +938,6 @@
                             </p>
                         </div>
 
-                        <!-- Преимущества расчета -->
                         <div class="mb-8 flex-1">
                             <div class="space-y-4">
                                 <div class="flex items-start">
@@ -1068,7 +967,6 @@
                             </div>
                         </div>
 
-                        <!-- Блок с примерными ценами -->
                         <div class="p-4 bg-blue-50 rounded-lg border border-blue-100">
                             <div class="text-center">
                                 <p class="text-sm text-gray-600 mb-2">Средняя стоимость проектов</p>
@@ -1087,11 +985,9 @@
             </div>
         </div>
 
-        <!-- Примечание с кнопкой -->
         <div class="mt-12">
             <div class="flex flex-col md:flex-row items-center justify-between p-4 lg:p-6 bg-gradient-to-b from-white to-blue-50/50 rounded-xl gap-4 md:gap-6">
-                <!-- Текст слева -->
-                <div class="flex items-start md:items-center">
+               <div class="flex items-start md:items-center">
                     <i class="fas fa-info-circle text-blue-500 text-xl mt-1 md:mt-0 mr-4 flex-shrink-0"></i>
                     <p class="text-gray-600 text-sm md:text-base">
                         Мы не используем шаблонные калькуляторы. Каждый проект уникален и требует 
@@ -1099,7 +995,6 @@
                     </p>
                 </div>
                 
-                <!-- Кнопка справа -->
                 <div class="flex-shrink-0">
                     <button @click="isModalOpen = true" 
                             class="bg-white border border-blue-600 text-blue-600 hover:bg-blue-50 font-semibold py-3 px-6 rounded-lg text-sm md:text-base transition duration-200 whitespace-nowrap">
@@ -1111,24 +1006,19 @@
     </div>
 </section>
     
-        <!-- Секция "Частые ошибки" -->
-<section id="mistakes" class="py-12 lg:py-20 bg-white">
+        <section id="mistakes" class="py-12 lg:py-20 bg-white">
     <div class="container mx-auto px-4">
-        <!-- Заголовок секции -->
-        <div class="text-center mb-12 lg:mb-16">
+       <div class="text-center mb-12 lg:mb-16">
             <h2 class="text-2xl lg:text-3xl font-heading text-gray-900 mb-4">
                 5 частых ошибок при газификации дома
             </h2>
-            <!-- Разделитель -->
-            <div class="w-32 h-0.5 bg-gray-200 mx-auto mb-6"></div>
+           <div class="w-32 h-0.5 bg-gray-200 mx-auto mb-6"></div>
             <p class="text-lg text-gray-600 max-w-2xl mx-auto">
                 Избегайте этих ошибок, чтобы сэкономить время, деньги и нервы
             </p>
         </div>
 
-        <!-- Ошибки в виде карточек -->
         <div class="grid grid-cols-1 lg:grid-cols-2 gap-8 mb-12">
-            <!-- Ошибка 1 -->
             <div class="bg-gradient-to-b from-white to-blue-50/50 border-gradient-to-b from-white to-blue-50/50 rounded-xl p-6 transition-all duration-300">
                 <div class="flex items-start mb-4">
                     <div class="w-10 h-10 bg-red-100 rounded-full flex items-center justify-center mr-4 flex-shrink-0">
@@ -1168,7 +1058,6 @@
                 </div>
             </div>
 
-            <!-- Ошибка 2 -->
             <div class="bg-gradient-to-b from-white to-blue-50/50 border-gradient-to-b from-white to-blue-50/50 rounded-xl p-6 transition-all duration-300">
                 <div class="flex items-start mb-4">
                     <div class="w-10 h-10 bg-red-100 rounded-full flex items-center justify-center mr-4 flex-shrink-0">
@@ -1208,7 +1097,6 @@
                 </div>
             </div>
 
-            <!-- Ошибка 3 -->
             <div class="bg-gradient-to-b from-white to-blue-50/50 border-gradient-to-b from-white to-blue-50/50 rounded-xl p-6 transition-all duration-300">
                 <div class="flex items-start mb-4">
                     <div class="w-10 h-10 bg-red-100 rounded-full flex items-center justify-center mr-4 flex-shrink-0">
@@ -1248,7 +1136,6 @@
                 </div>
             </div>
 
-            <!-- Ошибка 4 -->
             <div class="bg-gradient-to-b from-white to-blue-50/50 border-gradient-to-b from-white to-blue-50/50 rounded-xl p-6 transition-all duration-300">
                 <div class="flex items-start mb-4">
                     <div class="w-10 h-10 bg-red-100 rounded-full flex items-center justify-center mr-4 flex-shrink-0">
@@ -1288,7 +1175,6 @@
                 </div>
             </div>
 
-            <!-- Ошибка 5 -->
             <div class="bg-gradient-to-b from-white to-blue-50/50 border-gradient-to-b from-white to-blue-50/50 rounded-xl p-6 transition-all duration-300">
                 <div class="flex items-start mb-4">
                     <div class="w-10 h-10 bg-red-100 rounded-full flex items-center justify-center mr-4 flex-shrink-0">
@@ -1328,8 +1214,7 @@
                 </div>
             </div>
 
-            <!-- Заключительный блок как шестая карточка -->
-<div class="bg-gradient-to-b from-white to-blue-50/50 border-gradient-to-b from-white to-blue-50/50 rounded-xl p-6 transition-all duration-300 flex flex-col h-full">
+            <div class="bg-gradient-to-b from-white to-blue-50/50 border-gradient-to-b from-white to-blue-50/50 rounded-xl p-6 transition-all duration-300 flex flex-col h-full">
     <div class="flex-1">
         <div class="flex items-start mb-4">
             <div class="w-10 h-10 bg-yellow-100 rounded-full flex items-center justify-center mr-4 flex-shrink-0">
@@ -1350,7 +1235,6 @@
         </div>
     </div>
     
-    <!-- Кнопка прижата к низу, по центру -->
     <div class="mt-auto pt-4">
         <div class="text-center">
             <button @click="isModalOpen = true" 
@@ -1364,30 +1248,25 @@
     </div>
 </section>    
     
-        <!-- Секция FAQ -->
-    <section id="faq" class="py-12 lg:py-20 bg-white">
+        <section id="faq" class="py-12 lg:py-20 bg-white">
         <div class="container mx-auto px-4">
-            <!-- Заголовок секции -->
-            <div class="text-center mb-12 lg:mb-16">
+           <div class="text-center mb-12 lg:mb-16">
                 <h2 class="text-2xl lg:text-3xl font-heading text-gray-900 mb-4">
                     Часто задаваемые вопросы
                 </h2>
-                <!-- Разделитель -->
                 <div class="w-32 h-0.5 bg-gray-200 mx-auto mb-6"></div>
                 <p class="text-lg text-gray-600 max-w-2xl mx-auto">
                     Ответы на самые популярные вопросы о газификации частных домов
                 </p>
             </div>
 
-            <!-- Аккордеон FAQ -->
             <div class="max-w-3xl mx-auto space-y-4" x-data="{ 
                 openFaq: null,
                 toggleFaq(id) {
                     this.openFaq = this.openFaq === id ? null : id;
                 }
             }">
-                <!-- Вопрос 1 -->
-                <div class="border border-gray-200 rounded-xl overflow-hidden">
+               <div class="border border-gray-200 rounded-xl overflow-hidden">
                     <button 
                         @click="toggleFaq(1)"
                         class="w-full px-6 py-5 text-left flex justify-between items-center bg-white hover:bg-gray-50 transition duration-200"
@@ -1405,7 +1284,6 @@
                     </div>
                 </div>
 
-                <!-- Вопрос 2 -->
                 <div class="border border-gray-200 rounded-xl overflow-hidden">
                     <button 
                         @click="toggleFaq(2)"
@@ -1445,8 +1323,7 @@
                     </div>
                 </div>
 
-                <!-- Вопрос 3 -->
-                <div class="border border-gray-200 rounded-xl overflow-hidden">
+               <div class="border border-gray-200 rounded-xl overflow-hidden">
                     <button 
                         @click="toggleFaq(3)"
                         class="w-full px-6 py-5 text-left flex justify-between items-center bg-white hover:bg-gray-50 transition duration-200"
@@ -1464,7 +1341,6 @@
                     </div>
                 </div>
 
-                <!-- Вопрос 4 -->
                 <div class="border border-gray-200 rounded-xl overflow-hidden">
                     <button 
                         @click="toggleFaq(4)"
@@ -1483,7 +1359,6 @@
                     </div>
                 </div>
 
-                <!-- Вопрос 5 -->
                 <div class="border border-gray-200 rounded-xl overflow-hidden">
                     <button 
                         @click="toggleFaq(5)"
@@ -1530,8 +1405,7 @@
                     </div>
                 </div>
 
-                <!-- Вопрос 6 -->
-                <div class="border border-gray-200 rounded-xl overflow-hidden">
+               <div class="border border-gray-200 rounded-xl overflow-hidden">
                     <button 
                         @click="toggleFaq(6)"
                         class="w-full px-6 py-5 text-left flex justify-between items-center bg-white hover:bg-gray-50 transition duration-200"
@@ -1550,7 +1424,6 @@
                 </div>
             </div>
 
-            <!-- Кнопка для дополнительных вопросов -->
             <div class="text-center mt-12">
                 <p class="text-gray-600 mb-6">Не нашли ответ на свой вопрос?</p>
                 <button @click="isModalOpen = true" 
@@ -1561,12 +1434,10 @@
         </div>
     </section>
 
-<!-- Секция CTA - Широкая версия -->
 <section id="cta" class="py-12 lg:py-20 bg-white">
     <div class="container mx-auto px-4">
         <div class="bg-gradient-to-b from-white to-blue-50/50 border-gradient-to-b from-white to-blue-50/50 rounded-xl shadow-sm p-6 transition-all duration-300 hover:border-blue-300">
             <div class="flex flex-col lg:flex-row items-stretch gap-8 lg:gap-12">
-                <!-- Левая часть: Заголовок и преимущества -->
                 <div class="lg:w-1/2 flex flex-col">
                     <h2 class="text-2xl lg:text-3xl font-heading text-gray-900 mb-6 text-center lg:text-left">
                         Начните газификацию вашего дома уже сегодня
@@ -1575,7 +1446,6 @@
                         Получите бесплатную консультацию, выезд инженера и расчет стоимости за 24 часа
                     </p>
                     
-                    <!-- Преимущества в виде списка -->
                     <div class="space-y-4 mb-8">
                         <div class="flex items-start">
                             <div class="w-6 h-6 bg-green-100 rounded-full flex items-center justify-center mt-1 mr-4 flex-shrink-0">
@@ -1602,7 +1472,6 @@
                             <p class="text-gray-700">Гарантия 12 месяцев на все работы и материалы</p>
                         </div>
                         
-                        <!-- Доверительные элементы под гарантией -->
                         <div class="flex flex-wrap justify-start items-center gap-6 mt-6 pt-6 border-t border-gray-200">
                             <div class="text-center">
                                 <div class="text-2xl font-bold text-blue-600 mb-1">12+</div>
@@ -1622,11 +1491,8 @@
                     </div>
                 </div>
 
-                <!-- Правая часть: Форма для заявки -->
-                <div class="lg:w-1/2 w-full flex items-stretch">
-                    <!-- Белый блок с формой -->
+               <div class="lg:w-1/2 w-full flex items-stretch">
                     <div class="bg-white rounded-xl p-6 lg:p-8 border border-blue-200 shadow-lg w-full flex flex-col justify-center">
-                        <!-- Заголовок формы с иконкой сверху -->
                         <div class="text-center mb-6">
                             <div class="mb-3">
                                 <i class="fas fa-phone-alt text-blue-600 text-2xl"></i>
@@ -1635,9 +1501,7 @@
                             <p class="text-gray-600 text-sm">Заполните форму и мы перезвоним в течение 15 минут</p>
                         </div>
 
-                        <!-- Форма -->
                         <div class="space-y-4">
-                            <!-- Имя -->
                             <div>
                                 <label class="block text-sm font-medium text-gray-700 mb-1">
                                     Ваше имя <span class="text-red-500">*</span>
@@ -1647,7 +1511,6 @@
                                        placeholder="Иван Иванов">
                             </div>
                             
-                            <!-- Телефон -->
                             <div>
                                 <label class="block text-sm font-medium text-gray-700 mb-1">
                                     Номер телефона <span class="text-red-500">*</span>
@@ -1657,7 +1520,6 @@
                                        placeholder="+7 (___) ___-__-__">
                             </div>
                             
-                            <!-- Согласие -->
                             <div class="flex items-start space-x-3">
                                 <div class="mt-1 h-4 w-4 bg-blue-600 border-gray-300 rounded flex items-center justify-center flex-shrink-0">
                                     <i class="fas fa-check text-white text-xs"></i>
@@ -1668,7 +1530,6 @@
                                 </p>
                             </div>
                             
-                            <!-- Кнопка отправки -->
                             <button type="button" 
                                     @click="isModalOpen = true"
                                     class="w-full consult-btn text-white font-semibold py-3 px-6 rounded-lg text-sm transition duration-200 mt-2">
@@ -1682,12 +1543,10 @@
     </div>
 </section>
 
-    <!-- Футер -->
     <footer id="footer" class="bg-gray-800 text-white mt-20">
         <div class="container mx-auto px-4">
             <div class="py-10 border-b border-gray-700">
                 <div class="flex flex-col md:flex-row justify-center items-start gap-8 md:gap-12 lg:gap-20">
-                    <!-- Адрес (первый слева) -->
                     <div class="flex items-start space-x-4">
                         <div class="w-10 h-10 bg-gray-700 rounded-full flex items-center justify-center mt-1 flex-shrink-0">
                             <i class="fas fa-map-marker-alt text-blue-300"></i>
@@ -1698,7 +1557,6 @@
                         </div>
                     </div>
                     
-                    <!-- Телефон (кликабельный) (в центре) -->
                     <div class="flex items-start space-x-4">
                         <div class="w-10 h-10 bg-gray-700 rounded-full flex items-center justify-center mt-1 flex-shrink-0">
                             <i class="fas fa-phone text-blue-300"></i>
@@ -1711,7 +1569,6 @@
                         </div>
                     </div>
                     
-                    <!-- Почта (кликабельная) (в конце) -->
                     <div class="flex items-start space-x-4">
                         <div class="w-10 h-10 bg-gray-700 rounded-full flex items-center justify-center mt-1 flex-shrink-0">
                             <i class="fas fa-envelope text-blue-300"></i>
@@ -1742,7 +1599,6 @@
             <div class="py-6">
                 <div class="flex flex-col md:flex-row justify-between items-center space-y-4 md:space-y-0">
                     <div class="flex items-center space-x-3">
-                        <!-- Логотип в футере из файла -->
                         <div class="flex items-center justify-center flex-shrink-0">
                             <img src="logo.svg" alt="СКС ТАУРУС" class="footer-logo-img">
                         </div>
@@ -1770,16 +1626,13 @@
         </div>
     </footer>
 
-<!-- Самый простой спиннер -->
 <div id="loading-spinner" class="fixed inset-0 bg-white z-50 flex items-center justify-center">
     <div class="flex flex-col items-center">
-        <!-- Спиннер из Tailwind -->
         <div class="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-600 mb-4"></div>
     </div>
 </div>
 
     <script>
-        // Закрытие меню при ресайзе
         window.addEventListener('resize', function() {
             if (window.innerWidth >= 1024) {
                 if (document.querySelector('[x-data]') && document.querySelector('[x-data]').__x) {
@@ -1789,7 +1642,6 @@
             }
         });
 
-        // Простое скрытие при загрузке
     window.addEventListener('load', function() {
     const spinner = document.getElementById('loading-spinner');
     spinner.classList.add('opacity-0');
